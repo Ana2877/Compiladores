@@ -2,8 +2,9 @@
 #include "scanner.h"
 %}
 
-%%
+%x COMMENT
 
+%%
  /*Reserved Words*/
 char																									{return KW_CHAR;}
 int																										{return KW_INT;}
@@ -21,6 +22,13 @@ return																								{return KW_RETURN;}
  /*Line Counter*/
 "\n"																									{++ line_number;}
 
+ /*Ignore white spaces and tabs*/
+[\t ]
+
+ /* Comments */
+"//"(.)*
+"/*"																									{BEGIN(COMMENT);}
+
  /*Composite Operators*/
 (<=)																									{return OPERATOR_LE;}
 (>=)																									{return OPERATOR_GE;}
@@ -30,21 +38,28 @@ return																								{return KW_RETURN;}
 (->)																									{return RIGHT_ASSIGN;}
 
  /* Literals */
-'(.)'																									{return LIT_CHAR;}
-\"([^"\\\n]|\\.)*\"      															{return LIT_STRING;}
+'(.)'																									{hashInsert(yytext, LIT_CHAR); return LIT_CHAR;}
+\"([^"\\\n]|\\.)*\"      															{hashInsert(yytext, LIT_STRING); return LIT_STRING;}
 true  																								{return LIT_TRUE;}
 false																									{return LIT_FALSE;}
 
  /* Integers */
-[0-9]+																								{return LIT_INTEGER;}
+[0-9]+																								{hashInsert(yytext, LIT_INTEGER); return LIT_INTEGER;}
 
  /*Special Characters*/
 [\-\,\;\:\(\)\[\]\{\}\+\*\/\<\>\|\&\~\$\#] 						{return yytext[0];}
 
  /*Identifiers*/
-[A-Za-z_][A-Za-z0-9_]+ 																{return TK_IDENTIFIER;}
+[A-Za-z_][A-Za-z0-9_]* 																{hashInsert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER;}
 
+ /*Token Error*/
 .																											{return TOKEN_ERROR;}
+
+
+
+<COMMENT>"*/"																					{BEGIN(INITIAL);}
+<COMMENT>"\n"																					{++line_number;}
+<COMMENT>.
 
 %%
 

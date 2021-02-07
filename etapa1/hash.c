@@ -20,9 +20,11 @@ int hashAddress(char *text){
 HASH_NODE *hashFind(char *text){
   HASH_NODE *node;
   int address = hashAddress(text);
-  for(node=Table[address]; node; node->next)
+  for(node=Table[address]; node; node = node->next){
     if(strcmp(node->text, text) == 0)
       return node;
+  }
+
   return 0;
 }
 
@@ -46,5 +48,5 @@ void hashPrint(void){
   HASH_NODE *node;
   for(i=0; i<HASH_SIZE; i++)
     for (node=Table[i]; node; node=node->next)
-      printf("Table[%d] has %s\n", i, node->next);
+      printf("Table[%d] has %s\n", i, node->text);
 }

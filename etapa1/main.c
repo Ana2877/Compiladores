@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "hash.h"
 
 //lex.yy.h
 int yylex();
@@ -39,5 +40,6 @@ int main(int argc, char **argv){
             yytext);
 
 	}
+	hashPrint();
 	printf("Acabou\n");
 }
