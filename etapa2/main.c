@@ -3,14 +3,14 @@
 #include "hash.h"
 
 //lex.yy.h
-int yylex();
+extern int yylex();
 extern char *yytext;
 extern FILE *yyin;
 
-
 int isRunning(void);
 void initMe(void);
-int getLineNumber(void);
+
+extern int yyparse();
 
 int main(int argc, char **argv){
 

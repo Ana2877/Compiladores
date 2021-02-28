@@ -28,17 +28,50 @@
 %token TOKEN_ERROR
 
 %%
-programa: decl;
+programa: declaration_list;
 
-decl: dec ',' decl | ;
+declaration_list: init_declaration end_declaration | ;
 
-dec: KW_INT TK_IDENTIFIER | KW_INT TK_IDENTIFIER '(' ')' '{' '}';
+end_declaration: ';' init_declaration end_declaration |;
 
+/*init_declaration: variable | KW_INT TK_IDENTIFIER | KW_INT TK_IDENTIFIER '(' ')' function_body;*/
+init_declaration: variable | array;
+
+/* Variable declaration */
+variable: type TK_IDENTIFIER ':' literal;
+
+/* Array declaration */
+array: array_initialized | array_not_initialized;
+
+array_not_initialized: type '[' LIT_INTEGER ']' TK_IDENTIFIER
+
+array_initialized: array_not_initialized ':'
+
+
+
+/* types */
+type: KW_CHAR | KW_INT | KW_BOOL | KW_POINTER;
+
+/* literals, except string */
+literal: LIT_INTEGER | LIT_TRUE | LIT_FALSE | LIT_CHAR;
+
+function_body: '{' command_list '}';
+
+command_list: command command_list | ;
+
+command: TK_IDENTIFIER LEFT_ASSIGN expression;
+
+expression: LIT_INTEGER | TK_IDENTIFIER | expression '+' expression | '(' expression ')';
 
 %%
 
+#include <stdio.h>
+#include <stdlib.h>
+
+extern int getLineNumber();
+
 int yyerror()
 {
-  fprintf(stderr, "Syntax error.\n");
-  exit(3);
+  fprintf(stderr, "Syntax error at line %d.\n", getLineNumber());
+  //exit(3);
 }
