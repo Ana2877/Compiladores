@@ -28,34 +28,72 @@
 %token TOKEN_ERROR
 
 %%
-programa: declaration_list;
+program: declaration_list;
+declaration_list: declaration recursive_declaration | ;
+recursive_declaration: ';' declaration recursive_declaration |;
 
-declaration_list: init_declaration end_declaration | ;
+/* Declaration */
+declaration: variable | array | function;
 
-end_declaration: ';' init_declaration end_declaration |;
-
-/*init_declaration: variable | KW_INT TK_IDENTIFIER | KW_INT TK_IDENTIFIER '(' ')' function_body;*/
-init_declaration: variable | array;
 
 /* Variable declaration */
-variable: type TK_IDENTIFIER ':' literal;
+variable: variable_initialized | variable_not_initialized;
+variable_not_initialized: type TK_IDENTIFIER;
+variable_initialized: variable_not_initialized ':' literal;
+
 
 /* Array declaration */
 array: array_initialized | array_not_initialized;
-
-array_not_initialized: type '[' LIT_INTEGER ']' TK_IDENTIFIER
-
-array_initialized: array_not_initialized ':'
-
+array_not_initialized: type '[' LIT_INTEGER ']' TK_IDENTIFIER;
+array_initialized: array_not_initialized ':' literal_list;
+array_with_expression: TK_IDENTIFIER '[' expression ']';
 
 
 /* types */
 type: KW_CHAR | KW_INT | KW_BOOL | KW_POINTER;
 
+
 /* literals, except string */
 literal: LIT_INTEGER | LIT_TRUE | LIT_FALSE | LIT_CHAR;
+literal_list: literal literal_list |;
 
+
+/* Functions */
+function: function_header function_body;
+function_header: type TK_IDENTIFIER function_parameters;
+function_parameters: '('parameter_list ')';
 function_body: '{' command_list '}';
+
+
+/* Parameters */
+parameter_list: parameter recursive_parameter |;
+recursive_parameter: ',' parameter recursive_parameter |;
+parameter: variable_not_initialized;
+
+
+/* Command Block */
+command_list: command recursive_command |;
+recursive_command: ';' command recursive_command |;
+
+
+command: assign | read;
+
+/* Assign */
+assign: assign_variable | assign_array;
+
+assign_variable: assign_variable_right | assign_variable_left;
+assign_variable_right: expression RIGHT_ASSIGN TK_IDENTIFIER;
+assign_variable_left: TK_IDENTIFIER LEFT_ASSIGN expression;
+
+assign_array: assign_array_right | assign_array_left;
+assign_array_right: expression RIGHT_ASSIGN array_with_expression;
+assign_array_left: array_with_expression LEFT_ASSIGN expression;
+
+/* Read */
+read: KW_READ TK_IDENTIFIER;
+
+/* Print */
+
 
 command_list: command command_list | ;
 

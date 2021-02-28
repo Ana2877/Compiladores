@@ -8,7 +8,7 @@ int i :  0;
 int[10] v : 0 0 0 0 0 0 0 0 0 0;
 int [ 10] mat ;
 
-int main ()
+int main (int var, char var2)
   {
   a <- 5;
   v[a] <- 55;
