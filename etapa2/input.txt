@@ -96,5 +96,5 @@ char some_whiles (int p)
   };
 
 bool printando(){
-  print a, b, c, d, e+j, (i*m);
+  print a, b, c, d, e+j, (i*m), ~a;
 };

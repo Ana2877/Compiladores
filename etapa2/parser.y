@@ -27,6 +27,17 @@
 
 %token TOKEN_ERROR
 
+%{
+  int yyerror();
+  int yylex();
+%}
+
+%left '|' '&'
+%left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
+%left '+' '-'
+%left '*' '/'
+%left '~' '#' '$'
+
 %%
 program: declaration_list;
 declaration_list: declaration recursive_declaration | ;
@@ -105,11 +116,6 @@ printable_variable: LIT_STRING | expression;
 return: KW_RETURN expression;
 
 
-/* Operators */
-operator: '+' | '-' | '*' | '/' | '<' | '>' | '|' | '&' | OPERATOR_LE | OPERATOR_GE | OPERATOR_EQ | OPERATOR_DIF;
-unary_operator: '~' | '$' | '#';
-
-
 /* Expressions */
 expression_list: expression recursive_expression |;
 recursive_expression: ',' expression recursive_expression |;
@@ -151,5 +157,5 @@ extern int getLineNumber();
 int yyerror()
 {
   fprintf(stderr, "Syntax error at line %d.\n", getLineNumber());
-  //exit(3);
+  exit(3);
 }
