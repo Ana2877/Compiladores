@@ -30,7 +30,7 @@
 %%
 program: declaration_list;
 declaration_list: declaration recursive_declaration | ;
-recursive_declaration: ';' declaration recursive_declaration |;
+recursive_declaration: ';' declaration recursive_declaration | ';';
 
 /* Declaration */
 declaration: variable | array | function;
@@ -59,10 +59,10 @@ literal_list: literal literal_list |;
 
 
 /* Functions */
-function: function_header function_body;
+function: function_header command_block;
 function_header: type TK_IDENTIFIER function_parameters;
-function_parameters: '('parameter_list ')';
-function_body: '{' command_list '}';
+function_parameters: '(' parameter_list ')';
+function_call: TK_IDENTIFIER '(' expression_list ')';
 
 
 /* Parameters */
@@ -72,11 +72,11 @@ parameter: variable_not_initialized;
 
 
 /* Command Block */
-command_list: command recursive_command |;
-recursive_command: ';' command recursive_command |;
+command_block: '{' command_list '}';
+command_list: command ';' command_list |;
+command: assign | read | print | return | if_then | if_then_else | while | ;
+command_or_command_list: command | command_block;
 
-
-command: assign | read;
 
 /* Assign */
 assign: assign_variable | assign_array;
@@ -89,17 +89,44 @@ assign_array: assign_array_right | assign_array_left;
 assign_array_right: expression RIGHT_ASSIGN array_with_expression;
 assign_array_left: array_with_expression LEFT_ASSIGN expression;
 
+
 /* Read */
 read: KW_READ TK_IDENTIFIER;
 
+
 /* Print */
+print: KW_PRINT print_list;
+print_list: printable_variable recursive_print |;
+recursive_print: ',' printable_variable recursive_print |;
+printable_variable: LIT_STRING | expression;
 
 
-command_list: command command_list | ;
+/* Return */
+return: KW_RETURN expression;
 
-command: TK_IDENTIFIER LEFT_ASSIGN expression;
 
-expression: LIT_INTEGER | TK_IDENTIFIER | expression '+' expression | '(' expression ')';
+/* Operators */
+operator: '+' | '-' | '*' | '/' | '<' | '>' | '|' | '&' | OPERATOR_LE | OPERATOR_GE | OPERATOR_EQ | OPERATOR_DIF;
+unary_operator: '~' | '$' | '#';
+
+
+/* Expressions */
+expression_list: expression recursive_expression |;
+recursive_expression: ',' expression recursive_expression |;
+expression: array_with_expression |
+            TK_IDENTIFIER |
+            LIT_CHAR |
+            LIT_INTEGER |
+            expression operator expression |
+            unary_operator expression |
+            function_call |
+            '(' expression ')';
+
+
+/* Flow Control */
+if_then: KW_IF '(' expression ')' KW_THEN command_or_command_list;
+if_then_else: KW_IF '(' expression ')' KW_THEN command_or_command_list KW_ELSE command_or_command_list;
+while: KW_WHILE '(' expression ')' command_or_command_list;
 
 %%
 
