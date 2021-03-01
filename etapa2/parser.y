@@ -117,9 +117,22 @@ expression: array_with_expression |
             TK_IDENTIFIER |
             LIT_CHAR |
             LIT_INTEGER |
-            expression operator expression |
-            unary_operator expression |
-            function_call |
+            expression '+' expression |
+            expression '-' expression |
+            expression '*' expression |
+            expression '/' expression |
+            expression '<' expression |
+            expression '>' expression |
+            expression '|' expression |
+            expression '&' expression |
+            expression OPERATOR_LE expression |
+            expression OPERATOR_GE expression |
+            expression OPERATOR_EQ expression |
+            expression OPERATOR_DIF expression |
+            '~' expression |
+            '$' expression |
+            '#' expression |
+            function_call  |
             '(' expression ')';
 
 

@@ -38,19 +38,19 @@ return				    	{return KW_RETURN;}
 (->)					{return RIGHT_ASSIGN;}
 
  /* Literals */
-'(.)'					{hashInsert(yytext, LIT_CHAR); return LIT_CHAR;}
-\"([^"\\\n]|\\.)*\"     		{hashInsert(yytext, LIT_STRING); return LIT_STRING;}
+'(.)'					{hashInsert(yytext, SYMBOL_LIT_CHAR); return LIT_CHAR;}
+\"([^"\\\n]|\\.)*\"     		{hashInsert(yytext, SYMBOL_LIT_STRING); return LIT_STRING;}
 true  				    	{return LIT_TRUE;}
 false					{return LIT_FALSE;}
 
  /* Integers */
-[0-9]+				    	{hashInsert(yytext, LIT_INTEGER); return LIT_INTEGER;}
+[0-9]+				    	{hashInsert(yytext, SYMBOL_LIT_INTEGER); return LIT_INTEGER;}
 
  /*Special Characters*/
 [\-\,\;\:\(\)\[\]\{\}\+\*\/\<\>\|\&\~\$\#] 		{return yytext[0];}
 
  /*Identifiers*/
-[A-Za-z_][A-Za-z0-9_]*  		{hashInsert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER;}
+[A-Za-z_][A-Za-z0-9_]*  		{hashInsert(yytext, SYMBOL_IDENTIFIER); return TK_IDENTIFIER;}
 
  /*Token Error*/
 .					{return TOKEN_ERROR;}
