@@ -44,11 +44,10 @@ declaration_list: declaration recursive_declaration | ;
 recursive_declaration: ';' declaration recursive_declaration | ';';
 
 /* Declaration */
-declaration: variable | array | function;
+declaration: variable_initialized | array | function;
 
 
 /* Variable declaration */
-variable: variable_initialized | variable_not_initialized;
 variable_not_initialized: type TK_IDENTIFIER;
 variable_initialized: variable_not_initialized ':' literal;
 
@@ -85,8 +84,7 @@ parameter: variable_not_initialized;
 /* Command Block */
 command_block: '{' command_list '}';
 command_list: command ';' command_list |;
-command: assign | read | print | return | if_then | if_then_else | while | ;
-command_or_command_list: command | command_block;
+command: command_block | assign | read | print | return | if_then | if_then_else | while | ;
 
 
 /* Assign */
@@ -123,6 +121,8 @@ expression: array_with_expression |
             TK_IDENTIFIER |
             LIT_CHAR |
             LIT_INTEGER |
+            LIT_TRUE |
+            LIT_FALSE |
             expression '+' expression |
             expression '-' expression |
             expression '*' expression |
@@ -143,9 +143,9 @@ expression: array_with_expression |
 
 
 /* Flow Control */
-if_then: KW_IF '(' expression ')' KW_THEN command_or_command_list;
-if_then_else: KW_IF '(' expression ')' KW_THEN command_or_command_list KW_ELSE command_or_command_list;
-while: KW_WHILE '(' expression ')' command_or_command_list;
+if_then: KW_IF '(' expression ')' KW_THEN command;
+if_then_else: KW_IF '(' expression ')' KW_THEN command KW_ELSE command;
+while: KW_WHILE '(' expression ')' command;
 
 %%
 
