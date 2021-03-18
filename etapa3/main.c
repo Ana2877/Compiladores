@@ -1,11 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "hash.h"
+#include "decompiler.h"
 
 //lex.yy.h
 extern int yylex();
 extern char *yytext;
 extern FILE *yyin;
+extern AST *Root;
 
 void initMe(void);
 
@@ -15,7 +17,7 @@ int main(int argc, char **argv){
 
 	initMe();
 
-	if (argc < 2)
+	if (argc < 3)
   {
   	fprintf(stderr, "Call: %s input.txt\n", argv[0]);
   	exit(1);
@@ -26,7 +28,15 @@ int main(int argc, char **argv){
     exit(2);
   }
 
+	FILE *file =fopen(argv[2], "w");
+	if (file == 0) {
+		fprintf(stderr, "Cannot open file %s\n", argv[2]);
+		exit(2);
+	}
+
 	yyparse();
+
+	decompile(Root, file);
 
 	hashPrint();
 	printf("\n\nSuccesful Compilation!\n\n");

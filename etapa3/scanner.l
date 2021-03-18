@@ -6,10 +6,10 @@
 
 %%
  /*Reserved Words*/
-char					{return KW_CHAR;}
-int					{return KW_INT;}
-bool					{return KW_BOOL;}
-pointer	      				{return KW_POINTER;}
+char					{yylval.symbol = hashInsert(yytext, SYMBOL_KW_CHAR); return KW_CHAR;}
+int					{yylval.symbol = hashInsert(yytext, SYMBOL_KW_INT); return KW_INT;}
+bool					{ yylval.symbol = hashInsert(yytext, SYMBOL_KW_BOOL); return KW_BOOL;}
+pointer	      				{  yylval.symbol = hashInsert(yytext, SYMBOL_KW_POINTER);return KW_POINTER;}
 
 if					{return KW_IF;}
 then					{return KW_THEN;}
@@ -38,8 +38,8 @@ return				    	{return KW_RETURN;}
 (->)					{return RIGHT_ASSIGN;}
 
  /* Literals */
-'(.)'					{hashInsert(yytext, SYMBOL_LIT_CHAR); return LIT_CHAR;}
-\"([^"\\\n]|\\.)*\"     		{hashInsert(yytext, SYMBOL_LIT_STRING); return LIT_STRING;}
+'(.)'					{yylval.symbol = hashInsert(yytext, SYMBOL_LIT_CHAR); return LIT_CHAR;}
+\"([^"\\\n]|\\.)*\"     		{yylval.symbol = hashInsert(yytext, SYMBOL_LIT_STRING); return LIT_STRING;}
 true  				    	{return LIT_TRUE;}
 false					{return LIT_FALSE;}
 
