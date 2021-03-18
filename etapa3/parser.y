@@ -131,7 +131,7 @@ literal_list: literal literal_list                        { $$ = astCreate(AST_L
 function: function_header command_block                   { $$ = astCreate(AST_FUNCTION, 0, $1, $2, 0, 0);}
 function_header: type TK_IDENTIFIER function_parameters   { $$ = astCreate(AST_FUNCTION_HEADER, 0, $1, astCreateSymbol($2), $3, 0);};
 function_parameters: '(' parameter parameter_list ')'     { $$ = astCreate(AST_FUNCTION_PARAMETERS, 0, $2, $3, 0, 0);}
-                      | '('')'                            { $$ = astCreate(AST_NO_FUNCTION_PARAMETERS, 0, 0, 0, 0, 0);};
+                      | '('')'                            { $$ = 0;};
 function_call: TK_IDENTIFIER '(' expression expression_list ')'  { $$ = astCreate(AST_FUNCTION_CALL, 0, astCreateSymbol($1), $3, $4, 0);};
 
 
@@ -162,7 +162,7 @@ assign: assign_variable                                                { $$ = $1
 
 assign_variable: assign_variable_right                                 { $$ = $1;}
                   | assign_variable_left                               { $$ = $1;};
-assign_variable_right: expression RIGHT_ASSIGN TK_IDENTIFIER           { $$ = astCreate(AST_ASSIGN_VARIABLE_RIGHT, 0, astCreateSymbol($1), $3, 0, 0);};
+assign_variable_right: expression RIGHT_ASSIGN TK_IDENTIFIER           { $$ = astCreate(AST_ASSIGN_VARIABLE_RIGHT, 0, $1, astCreateSymbol($3), 0, 0);};
 assign_variable_left: TK_IDENTIFIER LEFT_ASSIGN expression             { $$ = astCreate(AST_ASSIGN_VARIABLE_LEFT, 0, astCreateSymbol($1), $3, 0, 0);};
 
 assign_array: assign_array_right                                       { $$ = $1;}

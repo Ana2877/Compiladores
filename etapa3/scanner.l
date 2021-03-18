@@ -40,8 +40,8 @@ return				    	{return KW_RETURN;}
  /* Literals */
 '(.)'					{yylval.symbol = hashInsert(yytext, SYMBOL_LIT_CHAR); return LIT_CHAR;}
 \"([^"\\\n]|\\.)*\"     		{yylval.symbol = hashInsert(yytext, SYMBOL_LIT_STRING); return LIT_STRING;}
-true  				    	{return LIT_TRUE;}
-false					{return LIT_FALSE;}
+true  				    	{ yylval.symbol = hashInsert(yytext, SYMBOL_LIT_TRUE); return LIT_TRUE;}
+false					{ yylval.symbol = hashInsert(yytext, SYMBOL_LIT_FALSE);return LIT_FALSE;}
 
  /* Integers */
 [0-9]+				    	{yylval.symbol = hashInsert(yytext, SYMBOL_LIT_INTEGER); return LIT_INTEGER;}
@@ -50,7 +50,7 @@ false					{return LIT_FALSE;}
 [\-\,\;\:\(\)\[\]\{\}\+\*\/\<\>\|\&\~\$\#] 		{return yytext[0];}
 
  /*Identifiers*/
-[A-Za-z_][A-Za-z0-9_]*  		{hashInsert(yytext, SYMBOL_IDENTIFIER); return TK_IDENTIFIER;}
+[A-Za-z_][A-Za-z0-9_]*  		{yylval.symbol = hashInsert(yytext, SYMBOL_IDENTIFIER); return TK_IDENTIFIER;}
 
  /*Token Error*/
 .					{return TOKEN_ERROR;}

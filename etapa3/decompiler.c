@@ -106,15 +106,8 @@ void decompile_AST_FUNCTION_CALL(AST *node, FILE* outputFile)
 // '(' parameter parameter_list ')'
 void decompile_AST_FUNCTION_PARAMETERS(AST *node, FILE* outputFile)
 {
-  fprintf(outputFile, "(");
   decompile(node->child[0], outputFile);
   decompile(node->child[1], outputFile);
-  fprintf(outputFile, ")");
-}
-// '(' ')'
-void decompile_AST_NO_FUNCTION_PARAMETERS(AST *node, FILE* outputFile)
-{
-  fprintf(outputFile, "()");
 }
 
 // ',' parameter parameter_list
@@ -242,7 +235,9 @@ void decompile_AST_FUNCTION_HEADER(AST *node, FILE* outputFile)
   decompile(node->child[0], outputFile);
   fprintf(outputFile, " ");
   decompile(node->child[1], outputFile);
+  fprintf(outputFile, "(");
   decompile(node->child[3], outputFile);
+  fprintf(outputFile, ")");
 }
 
 //function command_block
@@ -340,7 +335,6 @@ void decompile_AST_LITERAL_LIST(AST *node, FILE* outputFile)
 
 void decompile(AST* node, FILE *outputFile)
 {
-    fprintf(stderr, "%d\n", node->type);
     if (!node)
     {
         return;
@@ -416,9 +410,6 @@ void decompile(AST* node, FILE *outputFile)
             break;
         case AST_FUNCTION_PARAMETERS:
             decompile_AST_FUNCTION_PARAMETERS(node, outputFile);
-            break;
-        case AST_NO_FUNCTION_PARAMETERS:
-            decompile_AST_NO_FUNCTION_PARAMETERS(node, outputFile);
             break;
 
         case AST_COMMAND_LIST:

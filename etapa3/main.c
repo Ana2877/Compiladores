@@ -35,10 +35,10 @@ int main(int argc, char **argv){
 	}
 
 	yyparse();
+	hashPrint();
 
 	decompile(Root, file);
 
-	hashPrint();
 	printf("\n\nSuccesful Compilation!\n\n");
 
 	exit(0); //code for success
