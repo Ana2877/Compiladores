@@ -236,7 +236,7 @@ void decompile_AST_FUNCTION_HEADER(AST *node, FILE* outputFile)
   fprintf(outputFile, " ");
   decompile(node->child[1], outputFile);
   fprintf(outputFile, "(");
-  decompile(node->child[3], outputFile);
+  decompile(node->child[2], outputFile);
   fprintf(outputFile, ")");
 }
 

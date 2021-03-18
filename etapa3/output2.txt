@@ -33,7 +33,7 @@ print "Nao tem como isso...\n";
   print "OK!\n";
   
 };
-int incn()
+int incn(int x, int n)
 {
 return x + n;
   
@@ -55,7 +55,7 @@ print "Ok";
 };
   
 };
-int incn()
+int incn(int x, int y)
 {
 return a;
   return a[1];
@@ -83,7 +83,7 @@ if(i == 100)
   print "OK!\n";
   
 };
-char some_whiles()
+char some_whiles(int p)
 {
 while (i < 10){
 i <- incn(i, 1);
