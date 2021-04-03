@@ -1,0 +1,27 @@
+// UFRGS - Compiladores - Marcelo Johann - 2020/1
+
+bool bl: false;
+
+char cr: 'x';
+int it: 0;
+int it2: 0;
+int it2: 0;
+int[10] v: 0 0 0 0 0 0 0 0 0 0;
+int[10] v: 0 0 0 0 0 0 0 0 0 0;
+int [20] v;
+int [ 10] lalaland;
+
+int main ()
+  {
+  a <- 5 + 5;
+  v[a] <- 55 - 5;
+  print v[55];
+  2 -> i;
+
+  print "Digite um numero: \n";
+  read a;
+};
+
+int main (){
+
+};
