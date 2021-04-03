@@ -64,3 +64,12 @@ void check_and_set_declarations(AST *node)
   for (int i = 0; i < MAX_CHILDREN; i++)
     check_and_set_declarations(node->child[i]);
 }
+
+void check_undeclared()
+{
+    SemanticErrors += hash_check_undeclared();
+}
+
+int get_semantic_errors(){
+  return SemanticErrors;
+}

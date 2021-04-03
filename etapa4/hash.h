@@ -24,6 +24,16 @@
 #define SYMBOL_LOCAL_VARIABLE 15
 #define SYMBOL_USED_LOCAL_VARIABLE 16
 
+enum
+{
+  DATATYPE_ERROR = -1,
+  DATATYPE_UNDEFINED = 0,
+  DATATYPE_CHAR = 1,
+  DATATYPE_INT,
+  DATATYPE_FLOAT,
+  DATATYPE_BOOL,
+};
+
 typedef struct hash_node
 {
   int type;
@@ -36,5 +46,6 @@ int hashAddress(char *text);
 HASH_NODE *hashFind(char *text);
 HASH_NODE *hashInsert(char *text, int type);
 void hashPrint(void);
+int hash_check_undeclared();
 
 #endif

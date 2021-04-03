@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "hash.h"
 #include "decompiler.h"
+#include "semantic.h"
 
 //lex.yy.h
 extern int yylex();
@@ -14,6 +15,8 @@ void initMe(void);
 extern int yyparse();
 
 int main(int argc, char **argv){
+
+	int semantic_errors = 0;
 
 	initMe();
 
@@ -36,6 +39,15 @@ int main(int argc, char **argv){
 
 	yyparse();
 	printf("\n");
+
+	semantic_errors = get_semantic_errors();
+
+	if (semantic_errors > 0)
+	{
+		printf("Compilation ERROR! There was %d semantic errors \n", semantic_errors);
+		exit(4);
+	}
+
 	hashPrint();
 
 	decompile(Root, file);
