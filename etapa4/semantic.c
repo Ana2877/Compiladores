@@ -112,6 +112,24 @@ void validate_type_AST_OR(AST* node)
   validate_and_or(node);
 }
 
+void validate_type_AST_AND(AST* node)
+{
+  validate_and_or(node);
+}
+
+void validate_type_AST_NOT(AST* node)
+{
+  DATATYPE operand_type = get_type(node->child[0]);
+
+  printf("operand type %d\n", operand_type);
+
+  if (!is_bool_type(operand_type))
+  {
+      SemanticErrors++;
+      printf("Semantic Error: invalid operand type in NOT\n");
+  }
+}
+
 void validate_and_or(AST* node)
 {
   DATATYPE left_operand_type = get_type(node->child[0]);
@@ -120,15 +138,15 @@ void validate_and_or(AST* node)
   printf("left operand type %d\n", left_operand_type);
   printf("right operand type %d\n", right_operand_type);
 
-  if (!is_arithmetic_type(left_operand_type))
+  if (!is_bool_type(left_operand_type))
   {
       SemanticErrors++;
-      printf("Semantic Error: invalid left operand type\n");
+      printf("Semantic Error: invalid left operand type in AND or OR operation\n");
   }
-  else if (!is_arithmetic_type(right_operand_type))
+  else if (!is_bool_type(right_operand_type))
   {
       SemanticErrors++;
-      printf("Semantic Error: invalid right operand type\n");
+      printf("Semantic Error: invalid right operand type in AND or OR operation\n");
   }
 }
 
@@ -137,18 +155,18 @@ void validate_arithmetic_and_comparative_expression(AST * node)
   DATATYPE left_operand_type = get_type(node->child[0]);
   DATATYPE right_operand_type = get_type(node->child[1]);
 
-  printf("left operand type %d\n", left_operand_type);
-  printf("right operand type %d\n", right_operand_type);
+  // printf("left operand type %d\n", left_operand_type);
+  // printf("right operand type %d\n", right_operand_type);
 
   if (!is_arithmetic_type(left_operand_type))
   {
       SemanticErrors++;
-      printf("Semantic Error: invalid left operand type\n");
+      printf("Semantic Error: invalid left operand type in Arithmetic expression\n");
   }
   else if (!is_arithmetic_type(right_operand_type))
   {
       SemanticErrors++;
-      printf("Semantic Error: invalid right operand type\n");
+      printf("Semantic Error: invalid right operand type in Arithmetic expression\n");
   }
 }
 
@@ -185,10 +203,10 @@ void check_operands(AST* node)
         validate_type_AST_OR(node);
         break;
     case AST_AND:
-        //validate_type_AST_AND(node);
+        validate_type_AST_AND(node);
         break;
     case AST_NOT:
-        //validate_type_AST_NOT(node);
+        validate_type_AST_NOT(node);
         break;
     case AST_DIF:
         //validate_type_AST_DIF(node);

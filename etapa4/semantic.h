@@ -21,4 +21,7 @@ void validate_type_AST_LE(AST* node);
 void validate_arithmetic_and_comparative_expression(AST * node);
 
 void validate_type_AST_OR(AST* node);
+void validate_type_AST_AND(AST* node);
 void validate_and_or(AST* node);
+
+void validate_type_AST_NOT(AST* node);

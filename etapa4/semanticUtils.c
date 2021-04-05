@@ -107,6 +107,37 @@ DATATYPE get_type_AST_LT(AST* node)
   return get_type_comparator(node);
 }
 
+DATATYPE get_type_AST_OR(AST* node)
+{
+  return get_type_bool(node);
+}
+
+DATATYPE get_type_AST_AND(AST* node)
+{
+  return get_type_bool(node);
+}
+
+DATATYPE get_type_AST_NOT(AST* node)
+{
+  DATATYPE operand_type = get_type(node->child[0]);
+
+  if(is_bool_type(operand_type))
+    return DATATYPE_BOOL;
+  else
+    return DATATYPE_ERROR;
+}
+
+DATATYPE get_type_bool(AST* node)
+{
+  DATATYPE left_operand_type = get_type(node->child[0]);
+  DATATYPE right_operand_type = get_type(node->child[1]);
+
+  if((is_bool_type(left_operand_type)) && (is_bool_type(right_operand_type)))
+    return DATATYPE_BOOL;
+  else
+    return DATATYPE_ERROR;
+}
+
 DATATYPE get_type_arithmetic(AST* node)
 {
   DATATYPE left_operand_type = get_type(node->child[0]);
@@ -161,13 +192,13 @@ DATATYPE get_type(AST* node)
           datatype = get_type_AST_LT(node);
           break;
       case AST_OR:
-          //datatype = get_type_AST_OR(node);
+          datatype = get_type_AST_OR(node);
           break;
       case AST_AND:
-          //datatype = get_type_AST_AND(node);
+          datatype = get_type_AST_AND(node);
           break;
       case AST_NOT:
-          //datatype = get_type_AST_NOT(node);
+          datatype = get_type_AST_NOT(node);
           break;
       case AST_DIF:
           //datatype = get_type_AST_DIF(node);
