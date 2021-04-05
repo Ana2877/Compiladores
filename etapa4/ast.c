@@ -84,10 +84,10 @@ void astPrint(AST* node, int level)
     default: printf("AST_UNKNOWN"); break;
   }
 
+  printf("\n");
+
   if (node->symbol)
     fprintf(stderr, "%s\n", node->symbol->text);
-  else
-    fprintf(stderr, ",0\n");
 
   for (int i = 0; i < MAX_CHILDREN; i++)
     astPrint(node->child[i], level + 1);

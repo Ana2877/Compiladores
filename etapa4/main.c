@@ -42,15 +42,15 @@ int main(int argc, char **argv){
 
 	semantic_errors = get_semantic_errors();
 
+	hashPrint();
+
+	decompile(Root, file);
+
 	if (semantic_errors > 0)
 	{
 		printf("Compilation ERROR! There was %d semantic errors \n", semantic_errors);
 		exit(4);
 	}
-
-	hashPrint();
-
-	decompile(Root, file);
 
 	printf("\n\nSuccesful Compilation!\n\n");
 

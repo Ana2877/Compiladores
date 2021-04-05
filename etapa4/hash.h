@@ -21,21 +21,21 @@
 #define SYMBOL_VARIABLE 12
 #define SYMBOL_VECTOR 13
 #define SYMBOL_FUNCTION 14
-#define SYMBOL_LOCAL_VARIABLE 15
-#define SYMBOL_USED_LOCAL_VARIABLE 16
 
-enum
+typedef enum
 {
   DATATYPE_ERROR = -1,
   DATATYPE_UNDEFINED = 0,
   DATATYPE_CHAR = 1,
   DATATYPE_INT,
-  DATATYPE_FLOAT,
+  DATATYPE_POINTER,
   DATATYPE_BOOL,
-};
+  DATATYPE_STRING,
+} DATATYPE;
 
 typedef struct hash_node
 {
+  DATATYPE datatype;
   int type;
   char *text;
   struct hash_node *next;

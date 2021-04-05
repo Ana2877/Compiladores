@@ -7,14 +7,17 @@
 # Therefore, there must be a header of it to be included in scanner.l
 #
 
-etapa4: lex.yy.c main.o hash.o y.tab.c ast.o decompiler.o semantic.o
-	gcc -Wall -o etapa4 lex.yy.c main.o hash.o ast.c decompiler.c semantic.o
+etapa4: lex.yy.c main.o hash.o y.tab.c ast.o decompiler.o semantic.o semanticUtils.o
+	gcc -Wall -o etapa4 lex.yy.c main.o hash.o ast.c decompiler.c semantic.o semanticUtils.o
 
 main.o: main.c
 	gcc -c main.c
 
 semantic.o: semantic.c
 	gcc -c semantic.c
+
+semanticUtils.o: semanticUtils.c
+	gcc -c semanticUtils.c
 
 decompiler.o: decompiler.c
 	gcc -c decompiler.c
