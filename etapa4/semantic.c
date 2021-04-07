@@ -250,28 +250,36 @@ void validate_type_AST_VARIABLE_INITIALIZED(AST * node)
 
 void validate_type_AST_ASSIGN_VARIABLE_RIGHT(AST * node)
 {
-  DATATYPE expression_type = get_type(node->child[0]);
-  DATATYPE operand_assign_type = get_type(node->child[1]);
-
-  if (!(is_arithmetic_type(expression_type) && is_arithmetic_type(operand_assign_type)) && expression_type != operand_assign_type)
-  {
-      SemanticErrors++;
-      printf("Semantic Error: invalid operand type in assign right\n");
-  }
+  validate_assign(node);
 }
 
 void validate_type_AST_ASSIGN_VARIABLE_LEFT(AST * node)
 {
-  DATATYPE expression_type = get_type(node->child[1]);
-  DATATYPE operand_assign_type = get_type(node->child[0]);
+  validate_assign(node);
+}
 
-  printf("left operand type %d\n", expression_type);
-  printf("right operand type %d\n", operand_assign_type);
+void validate_type_AST_ASSIGN_ARRAY_RIGHT(AST * node)
+{
+  validate_assign(node);
+}
 
-  if (!(is_arithmetic_type(expression_type) && is_arithmetic_type(operand_assign_type)) && expression_type != operand_assign_type)
+void validate_type_AST_ASSIGN_ARRAY_LEFT(AST * node)
+{
+  validate_assign(node);
+}
+
+void validate_assign(AST * node)
+{
+  DATATYPE assign_type1 = get_type(node->child[1]);
+  DATATYPE assign_type2 = get_type(node->child[0]);
+
+  printf("left operand type %d\n", assign_type1);
+  printf("right operand type %d\n", assign_type2);
+
+  if (!(is_arithmetic_type(assign_type1) && is_arithmetic_type(assign_type2)) && assign_type1 != assign_type2)
   {
       SemanticErrors++;
-      printf("Semantic Error: invalid operand type in assign left\n");
+      printf("Semantic Error: invalid operand type in assign\n");
   }
 }
 
@@ -460,10 +468,10 @@ void check_operands(AST* node)
         validate_type_AST_ASSIGN_VARIABLE_LEFT(node);
         break;
     case AST_ASSIGN_ARRAY_LEFT:
-        //validate_type_AST_ASSIGN_ARRAY_LEFT(node);
+        validate_type_AST_ASSIGN_ARRAY_LEFT(node);
         break;
     case AST_ASSIGN_ARRAY_RIGHT:
-        //validate_type_AST_ASSIGN_ARRAY_RIGHT(node);
+        validate_type_AST_ASSIGN_ARRAY_RIGHT(node);
         break;
 
     case AST_LITERAL_LIST:

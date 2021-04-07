@@ -9,8 +9,9 @@ int main(int t, bool f, bool g)
 a <- v[a] + 5;
   read a;
   true & true -> a1;
-  55 - 5 -> b;
+  true -> b;
   v[5] <- 55 - 5;
+  v[5] <- true;
   c <-  ~(true);
   f <- true == false;
   g <- true != false;

@@ -12,6 +12,7 @@ int main (int t, bool f, bool g)
   true & true -> a1;
   55-5 -> b;
   v[5] <- 55 - 5;
+  v[5] <- 55 - 5;
   c <- ~ (true);
   f <- true == false;
   g <- true !=  false;

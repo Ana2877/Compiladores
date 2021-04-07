@@ -38,5 +38,9 @@ void validate_type_AST_PARENTHESIS(AST* node);
 void validate_type_AST_READ(AST* node);
 void validate_type_AST_VARIABLE_INITIALIZED(AST * node);
 void validate_type_AST_ARRAY_WITH_EXPRESSION(AST* node);
+
 void validate_type_AST_ASSIGN_VARIABLE_RIGHT(AST * node);
 void validate_type_AST_ASSIGN_VARIABLE_LEFT(AST * node);
+void validate_type_AST_ASSIGN_ARRAY_RIGHT(AST * node);
+void validate_type_AST_ASSIGN_ARRAY_LEFT(AST * node);
+void validate_assign(AST * node);
