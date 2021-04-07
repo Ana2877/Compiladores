@@ -53,20 +53,33 @@ int is_datatype_error(int type)
 
 DATATYPE get_type_AST_SYMBOL(AST* node)
 {
+  HASH_NODE *hash_node;
   switch (node->symbol->type)
   {
     case SYMBOL_LIT_INTEGER:
+    case SYMBOL_KW_INT:
       return DATATYPE_INT;
 
     case SYMBOL_LIT_CHAR:
+    case SYMBOL_KW_CHAR:
       return DATATYPE_CHAR;
 
     case SYMBOL_LIT_TRUE:
     case SYMBOL_LIT_FALSE:
+    case SYMBOL_KW_BOOL:
       return DATATYPE_BOOL;
 
     case SYMBOL_LIT_STRING:
       return DATATYPE_STRING;
+
+    case SYMBOL_KW_POINTER:
+      return DATATYPE_POINTER;
+
+    case SYMBOL_VARIABLE:
+    case SYMBOL_VECTOR:
+    case SYMBOL_FUNCTION:
+      hash_node = hashFind(node->symbol->text);
+      return hash_node->datatype;
 
     default:
       printf("There is no corresponding datatype to symbol type %d\n", node->symbol->type);
@@ -143,6 +156,49 @@ DATATYPE get_type_AST_PARENTHESIS(AST* node)
 DATATYPE get_type_AST_DOLLAR(AST* node)
 {
   return DATATYPE_POINTER;
+}
+
+DATATYPE get_type_AST_RETURN(AST* node)
+{
+  DATATYPE operand_type = get_type(node->child[0]);
+  return operand_type;
+}
+
+DATATYPE get_type_AST_VARIABLE_NOT_INITIALIZED(AST* node)
+{
+  DATATYPE operand_type = get_type(node->child[0]);
+  return operand_type;
+}
+
+DATATYPE get_type_AST_ARRAY_NOT_INITIALIZED(AST* node)
+{
+  DATATYPE operand_type = get_type(node->child[0]);
+  return operand_type;
+}
+
+DATATYPE get_type_AST_ARRAY_INITIALIZED(AST* node)
+{
+  DATATYPE operand_type = get_type(node->child[0]->child[0]);
+  return operand_type;
+}
+
+DATATYPE get_type_AST_ARRAY_WITH_EXPRESSION(AST* node)
+{
+  HASH_NODE *hash_node = hashFind(node->child[0]->symbol->text);
+  printf("datatioe %d\n", hash_node->datatype);
+  return hash_node->datatype;
+}
+
+DATATYPE get_type_AST_VARIABLE_INITIALIZED(AST* node)
+{
+  DATATYPE operand_type = get_type(node->child[1]);
+  return operand_type;
+}
+
+DATATYPE get_type_AST_READ(AST* node)
+{
+  DATATYPE operand_type = get_type(node->child[0]);
+  return operand_type;
 }
 
 DATATYPE get_type_AST_HASHTAG(AST* node)
@@ -293,7 +349,7 @@ DATATYPE get_type(AST* node)
           break;
 
       case AST_READ:
-          //validate_type_AST_READ(node);
+          datatype = get_type_AST_READ(node);
           break;
 
       case AST_PRINT:
@@ -304,7 +360,7 @@ DATATYPE get_type(AST* node)
           break;
 
       case AST_RETURN:
-          //validate_type_AST_RETURN(node);
+          datatype = get_type_AST_RETURN(node);
           break;
 
       case AST_IF:
@@ -318,19 +374,19 @@ DATATYPE get_type(AST* node)
           break;
 
       case AST_VARIABLE_NOT_INITIALIZED:
-          //validate_type_AST_VARIABLE_NOT_INITIALIZED(node);
+          datatype = get_type_AST_VARIABLE_NOT_INITIALIZED(node);
           break;
       case AST_VARIABLE_INITIALIZED:
-          //validate_type_AST_VARIABLE_INITIALIZED(node);
+          datatype = get_type_AST_VARIABLE_INITIALIZED(node);
           break;
       case AST_ARRAY_NOT_INITIALIZED:
-          //validate_type_AST_ARRAY_NOT_INITIALIZED(node);
+          datatype = get_type_AST_ARRAY_NOT_INITIALIZED(node);
           break;
       case AST_ARRAY_INITIALIZED:
-          //validate_type_AST_ARRAY_INITIALIZED(node);
+          datatype = get_type_AST_ARRAY_INITIALIZED(node);
           break;
       case AST_ARRAY_WITH_EXPRESSION:
-          //validate_type_AST_ARRAY_WITH_EXPRESSION(node);
+          datatype = get_type_AST_ARRAY_WITH_EXPRESSION(node);
           break;
 
       case AST_ASSIGN_VARIABLE_RIGHT:

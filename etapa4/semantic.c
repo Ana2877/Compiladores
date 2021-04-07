@@ -19,8 +19,11 @@ void check_and_set_declarations(AST *node)
           printf("Semantic Error: variable %s has already been declared\n", node->child[0]->child[1]->symbol->text);
           ++SemanticErrors;
         }
-        node->child[0]->child[1]->symbol->type = SYMBOL_VARIABLE;
-        node->child[0]->child[1]->symbol->datatype = get_symbol_datatype(node->child[0]->child[0]->symbol->type);
+        else
+        {
+          node->child[0]->child[1]->symbol->type = SYMBOL_VARIABLE;
+          node->child[0]->child[1]->symbol->datatype = get_symbol_datatype(node->child[0]->child[0]->symbol->type);
+        }
       }
       break;
 
@@ -32,8 +35,11 @@ void check_and_set_declarations(AST *node)
           printf("Semantic Error: vector %s has already been declared\n", node->child[2]->symbol->text);
           ++SemanticErrors;
         }
-        node->child[2]->symbol->type = SYMBOL_VECTOR;
-        node->child[2]->symbol->datatype = get_symbol_datatype(node->child[0]->symbol->type);
+        else
+        {
+          node->child[2]->symbol->type = SYMBOL_VECTOR;
+          node->child[2]->symbol->datatype = get_symbol_datatype(node->child[0]->symbol->type);
+        }
       }
       break;
 
@@ -45,9 +51,12 @@ void check_and_set_declarations(AST *node)
             printf("Semantic Error: function %s has already been declared\n", node->child[1]->symbol->text);
             ++SemanticErrors;
         }
-        node->child[1]->symbol->type = SYMBOL_FUNCTION;
-        node->child[1]->symbol->datatype = get_symbol_datatype(node->child[0]->symbol->type);
-        check_parameters_list(node->child[2]);
+        else
+        {
+          node->child[1]->symbol->type = SYMBOL_FUNCTION;
+          node->child[1]->symbol->datatype = get_symbol_datatype(node->child[0]->symbol->type);
+          check_parameters_list(node->child[2]);
+        }
       }
       break;
     default: break;
@@ -80,7 +89,7 @@ void check_parameters_list(AST* node)
         ++SemanticErrors;
       }
       node->child[0]->child[1]->symbol->type = SYMBOL_VARIABLE;
-      node->child[0]->child[1]->symbol->datatype = get_symbol_datatype(node->child[0]->child[1]->symbol->type);
+      node->child[0]->child[1]->symbol->datatype = get_symbol_datatype(node->child[0]->child[0]->symbol->type);
     }
 
     if((node->child[1]) && (node->child[1]->type == AST_PARAMETER_LIST))
@@ -89,7 +98,6 @@ void check_parameters_list(AST* node)
     }
   }
 }
-
 
 void validate_type_AST_ADD(AST* node)
 {
@@ -164,6 +172,37 @@ void validate_type_AST_EQ(AST* node)
   validate_dif_and_equal(node);
 }
 
+void validate_type_AST_RETURN(AST* node)
+{
+  DATATYPE operand_type = get_type(node->child[0]);
+  if (!is_arithmetic_type(operand_type) && !is_bool_type(operand_type))
+  {
+      SemanticErrors++;
+      printf("Semantic Error: invalid operand type in RETURN\n");
+  }
+}
+
+void validate_type_AST_ARRAY_WITH_EXPRESSION(AST* node)
+{
+  DATATYPE operand_type = get_type(node->child[1]);
+
+  if (!is_arithmetic_type(operand_type))
+  {
+      SemanticErrors++;
+      printf("Semantic Error: invalid operand type in ARRAY access\n");
+  }
+}
+
+void validate_type_AST_READ(AST* node)
+{
+  int operand_type = node->child[0]->symbol->type;
+  if (operand_type != SYMBOL_VARIABLE)
+  {
+      SemanticErrors++;
+      printf("Semantic Error: invalid operand type in READ\n");
+  }
+}
+
 void validate_type_AST_PARENTHESIS(AST* node)
 {
   DATATYPE operand_type = get_type(node->child[0]);
@@ -191,6 +230,48 @@ void validate_type_AST_HASHTAG(AST* node)
   {
       SemanticErrors++;
       printf("Semantic Error: invalid operand type in the DOLLAR use\n");
+  }
+}
+
+void validate_type_AST_VARIABLE_INITIALIZED(AST * node)
+{
+  DATATYPE operand_type = get_type(node->child[0]->child[0]);
+  DATATYPE operand_assign_type = get_type(node->child[1]);
+
+  printf("left operand type %d\n", operand_type);
+  printf("right operand type %d\n", operand_assign_type);
+
+  if (!(is_arithmetic_type(operand_type) && is_arithmetic_type(operand_assign_type)) && operand_type != operand_assign_type)
+  {
+      SemanticErrors++;
+      printf("Semantic Error: invalid operand type in variable initialized\n");
+  }
+}
+
+void validate_type_AST_ASSIGN_VARIABLE_RIGHT(AST * node)
+{
+  DATATYPE expression_type = get_type(node->child[0]);
+  DATATYPE operand_assign_type = get_type(node->child[1]);
+
+  if (!(is_arithmetic_type(expression_type) && is_arithmetic_type(operand_assign_type)) && expression_type != operand_assign_type)
+  {
+      SemanticErrors++;
+      printf("Semantic Error: invalid operand type in assign right\n");
+  }
+}
+
+void validate_type_AST_ASSIGN_VARIABLE_LEFT(AST * node)
+{
+  DATATYPE expression_type = get_type(node->child[1]);
+  DATATYPE operand_assign_type = get_type(node->child[0]);
+
+  printf("left operand type %d\n", expression_type);
+  printf("right operand type %d\n", operand_assign_type);
+
+  if (!(is_arithmetic_type(expression_type) && is_arithmetic_type(operand_assign_type)) && expression_type != operand_assign_type)
+  {
+      SemanticErrors++;
+      printf("Semantic Error: invalid operand type in assign left\n");
   }
 }
 
@@ -237,9 +318,6 @@ void validate_arithmetic_and_comparative_expression(AST * node)
 {
   DATATYPE left_operand_type = get_type(node->child[0]);
   DATATYPE right_operand_type = get_type(node->child[1]);
-
-  // printf("left operand type %d\n", left_operand_type);
-  // printf("right operand type %d\n", right_operand_type);
 
   if (!is_arithmetic_type(left_operand_type))
   {
@@ -315,104 +393,95 @@ void check_operands(AST* node)
         break;
 
     case AST_DECLARATION_LIST:
-        //validate_type_AST_DECLARATION_LIST(node);
         break;
 
     case AST_FUNCTION_CALL:
-        //validate_type_AST_FUNCTION_CALL(node,outputFile);
+        //validate_type_AST_FUNCTION_CALL(node);
         break;
     case AST_FUNCTION:
-        //validate_type_AST_FUNCTION(node,outputFile);
+        //validate_type_AST_FUNCTION(node);
         break;
     case AST_FUNCTION_HEADER:
-        //validate_type_AST_FUNCTION_HEADER(node,outputFile);
+        //validate_type_AST_FUNCTION_HEADER(node);
         break;
     case AST_FUNCTION_PARAMETERS:
         //validate_type_AST_FUNCTION_PARAMETERS(node);
         break;
 
     case AST_COMMAND_LIST:
-        //validate_type_AST_COMMAND_LIST(node,outputFile);
+        //validate_type_AST_COMMAND_LIST(node);
         break;
     case AST_COMMAND_BLOCK:
-        //validate_type_AST_COMMAND_BLOCK(node,outputFile);
+        //validate_type_AST_COMMAND_BLOCK(node);
         break;
 
     case AST_READ:
-        //validate_type_AST_READ(node,outputFile);
+        validate_type_AST_READ(node);
         break;
 
     case AST_PRINT:
-        //validate_type_AST_PRINT(node,outputFile);
+        //validate_type_AST_PRINT(node);
         break;
     case AST_PRINT_LIST:
-        //validate_type_AST_PRINT_LIST(node,outputFile);
+        //validate_type_AST_PRINT_LIST(node);
         break;
 
     case AST_RETURN:
-        //validate_type_AST_RETURN(node,outputFile);
+        validate_type_AST_RETURN(node);
         break;
 
     case AST_IF:
-        //validate_type_AST_IF(node,outputFile);
+        //validate_type_AST_IF(node);
         break;
     case AST_IF_ELSE:
-        //validate_type_AST_IF_ELSE(node,outputFile);
+        //validate_type_AST_IF_ELSE(node);
         break;
     case AST_WHILE:
-        //validate_type_AST_WHILE(node,outputFile);
+        //validate_type_AST_WHILE(node);
         break;
 
     case AST_VARIABLE_NOT_INITIALIZED:
-        //validate_type_AST_VARIABLE_NOT_INITIALIZED(node,outputFile);
         break;
     case AST_VARIABLE_INITIALIZED:
-        //validate_type_AST_VARIABLE_INITIALIZED(node,outputFile);
+        validate_type_AST_VARIABLE_INITIALIZED(node);
         break;
     case AST_ARRAY_NOT_INITIALIZED:
-        //validate_type_AST_ARRAY_NOT_INITIALIZED(node,outputFile);
         break;
     case AST_ARRAY_INITIALIZED:
-        //validate_type_AST_ARRAY_INITIALIZED(node,outputFile);
         break;
     case AST_ARRAY_WITH_EXPRESSION:
-        //validate_type_AST_ARRAY_WITH_EXPRESSION(node);
+        validate_type_AST_ARRAY_WITH_EXPRESSION(node);
         break;
 
     case AST_ASSIGN_VARIABLE_RIGHT:
-        //validate_type_AST_ASSIGN_VARIABLE_RIGHT(node,outputFile);
+        validate_type_AST_ASSIGN_VARIABLE_RIGHT(node);
         break;
     case AST_ASSIGN_VARIABLE_LEFT:
-        //validate_type_AST_ASSIGN_VARIABLE_LEFT(node,outputFile);
+        validate_type_AST_ASSIGN_VARIABLE_LEFT(node);
         break;
     case AST_ASSIGN_ARRAY_LEFT:
-        //validate_type_AST_ASSIGN_ARRAY_LEFT(node,outputFile);
+        //validate_type_AST_ASSIGN_ARRAY_LEFT(node);
         break;
     case AST_ASSIGN_ARRAY_RIGHT:
-        //validate_type_AST_ASSIGN_ARRAY_RIGHT(node,outputFile);
+        //validate_type_AST_ASSIGN_ARRAY_RIGHT(node);
         break;
 
     case AST_LITERAL_LIST:
-        //validate_type_AST_LITERAL_LIST(node,outputFile);
+        //validate_type_AST_LITERAL_LIST(node);
         break;
 
     case AST_PARAMETER_LIST:
-        //validate_type_AST_PARAMETER_LIST(node,outputFile);
+        //validate_type_AST_PARAMETER_LIST(node);
         break;
 
     case AST_EXPRESSION_LIST:
-        //validate_type_AST_EXPRESSION_LIST(node,outputFile);
+        //validate_type_AST_EXPRESSION_LIST(node);
         break;
     default:
         break;
   }
   for (i = 0; i < MAX_CHILDREN; i++)
   {
-      //if (node->type == AST_FUNC_PARAMS_DEC)
-      //{
-      //    return;
-      //}
-
-      check_operands(node->child[i]);
+    check_operands(node->child[i]);
   }
 }

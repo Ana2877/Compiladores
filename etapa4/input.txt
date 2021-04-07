@@ -1,18 +1,20 @@
 int a: 0;
 int b: 7;
+bool c: false;
+int [10] v;
+bool a1: false;
+bool a2: false;
 
-int main (int a)
+int main (int t, bool f, bool g)
   {
-  a <- $b;
-  a <- 5 / 5;
-  b <- true | false;
-  b <- true & true;
-  v[a] <- 55 - 5;
-  c <- ~ true;
-  b <- ~ 7;
+  a <- v[a] + 5;
+  read a;
+  true & true -> a1;
+  55-5 -> b;
+  v[5] <- 55 - 5;
+  c <- ~ (true);
   f <- true == false;
-  f <- true == 4;
-  g <- true != 4;
   g <- true !=  false;
-  s <- ((true !=  5));
+
+  return 5;
 };
