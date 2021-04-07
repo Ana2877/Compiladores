@@ -47,6 +47,7 @@ void check_and_set_declarations(AST *node)
         }
         node->child[1]->symbol->type = SYMBOL_FUNCTION;
         node->child[1]->symbol->datatype = get_symbol_datatype(node->child[0]->symbol->type);
+        check_parameters_list(node);
       }
       break;
     default: break;
@@ -64,6 +65,31 @@ void check_undeclared()
 int get_semantic_errors()
 {
   return SemanticErrors;
+}
+
+void check_parameters_list(AST* node)
+{
+  if((node->child[2]) && (node->child[2]->type == AST_FUNCTION_PARAMETERS))
+  {
+    printf("\nHey\n");
+
+    if(node->child[2]->child[0])
+    {
+      printf("\nVar : %s \n", node->child[2]->child[0]->child[1]->symbol->text);
+      if(node->child[2]->child[0]->child[1]->symbol->type != SYMBOL_IDENTIFIER)
+      {
+        printf("Semantic Error: variable %s has already been declared\n", node->child[2]->child[0]->child[1]->symbol->text);
+        ++SemanticErrors;
+      }
+      node->child[2]->child[0]->child[1]->symbol->type = SYMBOL_VARIABLE;
+      node->child[2]->child[0]->child[1]->symbol->datatype = get_symbol_datatype(node->child[2]->child[0]->child[1]->symbol->type);
+    }
+
+    if((node->child[2]->child[1]) && (node->child[2]->child[1]->type == AST_PARAMETER_LIST))
+    {
+      //while(node->child[2]->child[1])
+    }
+  }
 }
 
 
@@ -130,13 +156,72 @@ void validate_type_AST_NOT(AST* node)
   }
 }
 
-void validate_and_or(AST* node)
+void validate_type_AST_DIF(AST* node)
+{
+  validate_dif_and_equal(node);
+}
+
+void validate_type_AST_EQ(AST* node)
+{
+  validate_dif_and_equal(node);
+}
+
+void validate_type_AST_PARENTHESIS(AST* node)
+{
+  DATATYPE operand_type = get_type(node->child[0]);
+  if (is_datatype_error(operand_type))
+  {
+      SemanticErrors++;
+      printf("Semantic Error: invalid operand type inside PARENTHESIS\n");
+  }
+}
+
+void validate_type_AST_DOLLAR(AST* node)
+{
+  int operand_type = node->child[0]->symbol->type;
+  if ((operand_type != SYMBOL_VARIABLE) && (operand_type != SYMBOL_VECTOR))
+  {
+      SemanticErrors++;
+      printf("Semantic Error: invalid operand type in the DOLLAR use\n");
+  }
+}
+
+void validate_type_AST_HASHTAG(AST* node)
+{
+  int operand_type = node->child[0]->type;
+  if (operand_type != SYMBOL_KW_POINTER)
+  {
+      SemanticErrors++;
+      printf("Semantic Error: invalid operand type in the DOLLAR use\n");
+  }
+}
+
+void validate_dif_and_equal(AST* node)
 {
   DATATYPE left_operand_type = get_type(node->child[0]);
   DATATYPE right_operand_type = get_type(node->child[1]);
 
-  printf("left operand type %d\n", left_operand_type);
-  printf("right operand type %d\n", right_operand_type);
+  if (!is_bool_type(left_operand_type) && !is_arithmetic_type(left_operand_type))
+  {
+      SemanticErrors++;
+      printf("Semantic Error: invalid left operand type in DIF or EQUAL operation\n");
+  }
+  else if (!is_bool_type(right_operand_type) && !is_arithmetic_type(right_operand_type))
+  {
+      SemanticErrors++;
+      printf("Semantic Error: invalid right operand type in DIF or EQUAL operation\n");
+  }
+  else if (left_operand_type != right_operand_type)
+  {
+      SemanticErrors++;
+      printf("Semantic Error: The operands type are different in DIF or EQUAL operation\n");
+  }
+}
+
+void validate_and_or(AST* node)
+{
+  DATATYPE left_operand_type = get_type(node->child[0]);
+  DATATYPE right_operand_type = get_type(node->child[1]);
 
   if (!is_bool_type(left_operand_type))
   {
@@ -209,10 +294,10 @@ void check_operands(AST* node)
         validate_type_AST_NOT(node);
         break;
     case AST_DIF:
-        //validate_type_AST_DIF(node);
+        validate_type_AST_DIF(node);
         break;
     case AST_EQ:
-        //validate_type_AST_EQ(node);
+        validate_type_AST_EQ(node);
         break;
     case AST_GE:
         validate_type_AST_GE(node);
@@ -221,14 +306,14 @@ void check_operands(AST* node)
         validate_type_AST_LE(node);
         break;
     case AST_DOLLAR:
-        //validate_type_AST_DOLLAR(node, outputFile);
+        validate_type_AST_DOLLAR(node);
         break;
     case AST_HASHTAG:
-        //validate_type_AST_HASHTAG(node, outputFile);
+        validate_type_AST_HASHTAG(node);
         break;
 
     case AST_PARENTHESIS:
-        //validate_type_AST_PARENTHESIS(node);
+        validate_type_AST_PARENTHESIS(node);
         break;
 
     case AST_DECLARATION_LIST:
@@ -245,7 +330,7 @@ void check_operands(AST* node)
         //validate_type_AST_FUNCTION_HEADER(node,outputFile);
         break;
     case AST_FUNCTION_PARAMETERS:
-        //validate_type_AST_FUNCTION_PARAMETERS(node, outputFile);
+        //validate_type_AST_FUNCTION_PARAMETERS(node);
         break;
 
     case AST_COMMAND_LIST:
@@ -293,7 +378,7 @@ void check_operands(AST* node)
         //validate_type_AST_ARRAY_INITIALIZED(node,outputFile);
         break;
     case AST_ARRAY_WITH_EXPRESSION:
-        //validate_type_AST_ARRAY_WITH_EXPRESSION(node, outputFile);
+        //validate_type_AST_ARRAY_WITH_EXPRESSION(node);
         break;
 
     case AST_ASSIGN_VARIABLE_RIGHT:

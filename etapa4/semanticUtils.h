@@ -2,6 +2,7 @@
 
 int is_arithmetic_type(int type);
 int is_bool_type(int type);
+int is_datatype_error(int type);
 
 DATATYPE get_symbol_datatype(int type);
 DATATYPE get_type(AST* node);
@@ -25,3 +26,10 @@ DATATYPE get_type_AST_AND(AST* node);
 DATATYPE get_type_bool(AST* node);
 
 DATATYPE get_type_AST_NOT(AST* node);
+
+DATATYPE get_type_AST_DIF(AST* node);
+DATATYPE get_type_AST_EQ(AST* node);
+DATATYPE get_type_dif_or_equal(AST* node);
+
+DATATYPE get_type_AST_PARENTHESIS(AST* node);
+DATATYPE get_type_AST_DOLLAR(AST* node);

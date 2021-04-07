@@ -9,6 +9,7 @@ void check_undeclared();
 int get_semantic_errors();
 int get_symbol_datatype(int type);
 void check_operands(AST* node);
+void check_parameters_list(AST* node);
 
 void validate_type_AST_SUB(AST* node);
 void validate_type_AST_ADD(AST* node);
@@ -25,3 +26,11 @@ void validate_type_AST_AND(AST* node);
 void validate_and_or(AST* node);
 
 void validate_type_AST_NOT(AST* node);
+
+void validate_type_AST_EQ(AST* node);
+void validate_type_AST_DIF(AST* node);
+void validate_dif_and_equal(AST* node);
+
+void validate_type_AST_PARENTHESIS(AST* node);
+void validate_type_AST_DOLLAR(AST* node);
+void validate_type_AST_HASHTAG(AST* node);
