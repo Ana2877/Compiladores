@@ -47,7 +47,7 @@ void check_and_set_declarations(AST *node)
         }
         node->child[1]->symbol->type = SYMBOL_FUNCTION;
         node->child[1]->symbol->datatype = get_symbol_datatype(node->child[0]->symbol->type);
-        check_parameters_list(node);
+        check_parameters_list(node->child[2]);
       }
       break;
     default: break;
@@ -69,25 +69,23 @@ int get_semantic_errors()
 
 void check_parameters_list(AST* node)
 {
-  if((node->child[2]) && (node->child[2]->type == AST_FUNCTION_PARAMETERS))
+  if(node)
   {
-    printf("\nHey\n");
-
-    if(node->child[2]->child[0])
+    if((node->child[0]) && (node->child[0]->type == AST_VARIABLE_NOT_INITIALIZED))
     {
-      printf("\nVar : %s \n", node->child[2]->child[0]->child[1]->symbol->text);
-      if(node->child[2]->child[0]->child[1]->symbol->type != SYMBOL_IDENTIFIER)
+      printf("\nVar : %s \n", node->child[0]->child[1]->symbol->text);
+      if(node->child[0]->child[1]->symbol->type != SYMBOL_IDENTIFIER)
       {
-        printf("Semantic Error: variable %s has already been declared\n", node->child[2]->child[0]->child[1]->symbol->text);
+        printf("Semantic Error: variable %s has already been declared\n", node->child[0]->child[1]->symbol->text);
         ++SemanticErrors;
       }
-      node->child[2]->child[0]->child[1]->symbol->type = SYMBOL_VARIABLE;
-      node->child[2]->child[0]->child[1]->symbol->datatype = get_symbol_datatype(node->child[2]->child[0]->child[1]->symbol->type);
+      node->child[0]->child[1]->symbol->type = SYMBOL_VARIABLE;
+      node->child[0]->child[1]->symbol->datatype = get_symbol_datatype(node->child[0]->child[1]->symbol->type);
     }
 
-    if((node->child[2]->child[1]) && (node->child[2]->child[1]->type == AST_PARAMETER_LIST))
+    if((node->child[1]) && (node->child[1]->type == AST_PARAMETER_LIST))
     {
-      //while(node->child[2]->child[1])
+      check_parameters_list(node->child[1]);
     }
   }
 }
