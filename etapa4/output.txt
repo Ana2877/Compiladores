@@ -2,9 +2,11 @@ int a: 0;
 int b: 7;
 bool c: false;
 int[10]v;
+bool[10]v2;
 bool a1: false;
+char baa: '5';
 bool a2: false;
-int sal(int flu, bool got)
+char sal(int flu, bool got)
 {
 a <- b;
   return 4;
@@ -12,12 +14,12 @@ a <- b;
 };
 int main(int t, bool f, bool g)
 {
-a <- v[a] + 5;
+v <- v + 5;
   read a;
   true & true -> a1;
-  2 -> v[b];
+  v -> v[b];
   v[5] <- 55 - 5;
-  v[5] <- 55 - 5;
+  v[baa] <- 55 - 5;
   c <-  ~(true);
   f <- true == false;
   g <- true != false;
@@ -33,6 +35,6 @@ a <- v[a] + 5;
   f <- true == false;
   
 };
-  return 5 + sal(a, a1);
+  return 5 + sal(a, a2);
   
 };

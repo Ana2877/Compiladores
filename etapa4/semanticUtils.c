@@ -47,6 +47,52 @@ int is_datatype_error(int type)
     return 0;
 }
 
+int is_compatible(int type, int type2)
+{
+  if(is_arithmetic_type(type) && is_arithmetic_type(type2))
+    return 1;
+  else if(type == type2)
+    return 1;
+  else
+    return 0;
+}
+
+int check_vector_nature(char *text)
+{
+  HASH_NODE *hash_node = hashFind(text);
+
+  if(hash_node->type != SYMBOL_VECTOR)
+  {
+    printf("Semantic Error: the operand is not a vector\n");
+    return 1;
+  }
+  return 0;
+}
+
+int check_variable_nature(char *text)
+{
+  HASH_NODE *hash_node = hashFind(text);
+
+  if(hash_node->type != SYMBOL_VARIABLE)
+  {
+    printf("Semantic Error: the operand is not a variable\n");
+    return 1;
+  }
+  return 0;
+}
+
+int check_function_nature(char *text)
+{
+  HASH_NODE *hash_node = hashFind(text);
+
+  if(hash_node->type != SYMBOL_FUNCTION)
+  {
+    printf("Semantic Error: the operand is not a function\n");
+    return 1;
+  }
+  return 0;
+}
+
 DATATYPE get_type_AST_SYMBOL(AST* node)
 {
   HASH_NODE *hash_node;

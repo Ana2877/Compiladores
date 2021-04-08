@@ -3,6 +3,11 @@
 int is_arithmetic_type(int type);
 int is_bool_type(int type);
 int is_datatype_error(int type);
+int is_compatible(int type, int type2);
+
+int check_vector_nature(char *text);
+int check_function_nature(char *text);
+int check_variable_nature(char *text);
 
 DATATYPE get_symbol_datatype(int type);
 DATATYPE get_type(AST* node);

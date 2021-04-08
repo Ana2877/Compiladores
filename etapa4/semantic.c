@@ -6,6 +6,8 @@ void check_and_set_declarations(AST *node)
 {
   int i;
   PARAMETER_TYPE_LIST *parameter_type_list = NULL;
+  HASH_NODE *hash_node;
+
   if (node == 0)
   {
     return;
@@ -193,10 +195,12 @@ void validate_type_AST_ARRAY_WITH_EXPRESSION(AST* node)
 {
   DATATYPE operand_type = get_type(node->child[1]);
 
-  if (!is_arithmetic_type(operand_type))
+  SemanticErrors += check_vector_nature(node->child[0]->symbol->text);
+
+  if(!is_arithmetic_type(operand_type))
   {
-      SemanticErrors++;
-      printf("Semantic Error: invalid operand type in ARRAY access\n");
+    SemanticErrors++;
+    printf("Semantic Error: invalid operand type in ARRAY access\n");
   }
 }
 
@@ -266,7 +270,7 @@ void validate_type_AST_FUNCTION(AST* node)
   DATATYPE return_type = find_return_type(node->child[1]->child[0]);
   DATATYPE function_type = get_type(node->child[0]->child[0]);
 
-  if(return_type != function_type)
+  if(!is_compatible(return_type, function_type))
   {
     SemanticErrors++;
     printf("Semantic Error: the return type differs from the function declaration\n");
@@ -276,13 +280,16 @@ void validate_type_AST_FUNCTION(AST* node)
 void check_function_call_parameters(AST* node, PARAMETER_TYPE_LIST *parameter_type_list)
 {
   DATATYPE operand_type;
+  HASH_NODE *hash_node_param;
 
   if(node)
   {
     if(parameter_type_list)
     {
+      SemanticErrors += check_variable_nature(node->child[0]->symbol->text);
+
       operand_type = get_type(node->child[0]);
-      if(operand_type != parameter_type_list->datatype)
+      if(!is_compatible(operand_type, parameter_type_list->datatype))
       {
         SemanticErrors++;
         printf("Semantic Error: invalid argument type in function call\n");
@@ -308,27 +315,39 @@ void check_function_call_parameters(AST* node, PARAMETER_TYPE_LIST *parameter_ty
   }
 }
 
+void validate_type_AST_FUNCTION_CALL_NO_PARAMAS(AST* node)
+{
+  SemanticErrors += check_function_nature(node->child[0]->symbol->text);
+}
+
 void validate_type_AST_FUNCTION_CALL(AST* node)
 {
   HASH_NODE *hash_node;
   DATATYPE operand_type;
   PARAMETER_TYPE_LIST *parameter_type_list_aux;
 
-  hash_node = hashFind(node->child[0]->symbol->text);
-  //print_list(hash_node->parameter_type_list);
-
-  parameter_type_list_aux = hash_node->parameter_type_list;
-  parameter_type_list_aux = parameter_type_list_aux->next;
-
-  if(node->child[1])
+  if(check_function_nature(node->child[0]->symbol->text))
   {
-    operand_type = get_type(node->child[1]);
-    if(operand_type != parameter_type_list_aux->datatype)
+    ++SemanticErrors;
+  }
+  else
+  {
+    hash_node = hashFind(node->child[0]->symbol->text);
+    parameter_type_list_aux = hash_node->parameter_type_list;
+    parameter_type_list_aux = parameter_type_list_aux->next;
+
+    if(node->child[1])
     {
-      SemanticErrors++;
-      printf("Semantic Error: invalid argument type in function call\n");
+      SemanticErrors+= check_variable_nature(node->child[1]->symbol->text);
+
+      operand_type = get_type(node->child[1]);
+      if(!is_compatible(operand_type, parameter_type_list_aux->datatype))
+      {
+        SemanticErrors++;
+        printf("Semantic Error: invalid argument type in function call\n");
+      }
+      check_function_call_parameters(node->child[2], parameter_type_list_aux->next);
     }
-    check_function_call_parameters(node->child[2], parameter_type_list_aux->next);
   }
 }
 
@@ -337,7 +356,7 @@ void validate_type_AST_VARIABLE_INITIALIZED(AST * node)
   DATATYPE operand_type = get_type(node->child[0]->child[0]);
   DATATYPE operand_assign_type = get_type(node->child[1]);
 
-  if (!(is_arithmetic_type(operand_type) && is_arithmetic_type(operand_assign_type)) && operand_type != operand_assign_type)
+  if (!is_compatible(operand_type, operand_assign_type))
   {
       SemanticErrors++;
       printf("Semantic Error: invalid operand type in variable initialized\n");
@@ -420,7 +439,7 @@ void validate_dif_and_equal(AST* node)
       SemanticErrors++;
       printf("Semantic Error: invalid right operand type in DIF or EQUAL operation\n");
   }
-  else if (left_operand_type != right_operand_type)
+  else if (!is_compatible(left_operand_type, right_operand_type))
   {
       SemanticErrors++;
       printf("Semantic Error: The operands type are different in DIF or EQUAL operation\n");
@@ -529,6 +548,7 @@ void check_operands(AST* node)
         validate_type_AST_FUNCTION_CALL(node);
         break;
     case AST_FUNCTION_CALL_NO_PARAMS:
+        validate_type_AST_FUNCTION_CALL_NO_PARAMAS(node);
         break;
     case AST_FUNCTION:
         validate_type_AST_FUNCTION(node);
