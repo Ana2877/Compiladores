@@ -41,7 +41,6 @@ void check_and_set_declarations(AST *node)
         else
         {
           node->child[2]->symbol->type = SYMBOL_VECTOR;
-          node->child[2]->symbol->is_vector = 1;
           node->child[2]->symbol->datatype = get_symbol_datatype(node->child[0]->symbol->type);
         }
       }
@@ -58,7 +57,6 @@ void check_and_set_declarations(AST *node)
         else
         {
           node->child[1]->symbol->type = SYMBOL_FUNCTION;
-          node->child[1]->symbol->is_function = 1;
           node->child[1]->symbol->datatype = get_symbol_datatype(node->child[0]->symbol->type);
           node->child[1]->symbol->parameter_type_list = create_list(0);
           check_parameters_list(node->child[2], node->child[1]->symbol->parameter_type_list);
@@ -320,6 +318,7 @@ void check_function_call_parameters(AST* node, PARAMETER_TYPE_LIST *parameter_ty
 
 void validate_type_AST_FUNCTION_CALL_NO_PARAMAS(AST* node)
 {
+  set_is_function(node->child[0]->symbol->text);
   SemanticErrors += check_function_nature(node->child[0]->symbol->text);
 }
 
@@ -329,6 +328,7 @@ void validate_type_AST_FUNCTION_CALL(AST* node)
   DATATYPE operand_type;
   PARAMETER_TYPE_LIST *parameter_type_list_aux;
 
+  set_is_function(node->child[0]->symbol->text);
   if(check_function_nature(node->child[0]->symbol->text))
   {
     ++SemanticErrors;
@@ -378,11 +378,13 @@ void validate_type_AST_ASSIGN_VARIABLE_LEFT(AST * node)
 
 void validate_type_AST_ASSIGN_ARRAY_RIGHT(AST * node)
 {
+  set_is_vector(node->child[1]->child[0]->symbol->text);
   validate_assign(node);
 }
 
 void validate_type_AST_ASSIGN_ARRAY_LEFT(AST * node)
 {
+  set_is_vector(node->child[0]->child[0]->symbol->text);
   validate_assign(node);
 }
 
