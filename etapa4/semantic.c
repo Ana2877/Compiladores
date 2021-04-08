@@ -41,6 +41,7 @@ void check_and_set_declarations(AST *node)
         else
         {
           node->child[2]->symbol->type = SYMBOL_VECTOR;
+          node->child[2]->symbol->is_vector = 1;
           node->child[2]->symbol->datatype = get_symbol_datatype(node->child[0]->symbol->type);
         }
       }
@@ -57,6 +58,7 @@ void check_and_set_declarations(AST *node)
         else
         {
           node->child[1]->symbol->type = SYMBOL_FUNCTION;
+          node->child[1]->symbol->is_function = 1;
           node->child[1]->symbol->datatype = get_symbol_datatype(node->child[0]->symbol->type);
           node->child[1]->symbol->parameter_type_list = create_list(0);
           check_parameters_list(node->child[2], node->child[1]->symbol->parameter_type_list);
@@ -193,6 +195,7 @@ void validate_type_AST_RETURN(AST* node)
 
 void validate_type_AST_ARRAY_WITH_EXPRESSION(AST* node)
 {
+  set_is_vector(node->child[0]->symbol->text);
   DATATYPE operand_type = get_type(node->child[1]);
 
   SemanticErrors += check_vector_nature(node->child[0]->symbol->text);

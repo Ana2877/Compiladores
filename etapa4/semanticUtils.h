@@ -9,6 +9,9 @@ int check_vector_nature(char *text);
 int check_function_nature(char *text);
 int check_variable_nature(char *text);
 
+void set_is_vector(char *text);
+void set_is_function(char *text);
+
 DATATYPE get_symbol_datatype(int type);
 DATATYPE get_type(AST* node);
 

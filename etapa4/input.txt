@@ -15,11 +15,11 @@ char sal(int flu, bool got)
 
 int main (int t, bool f, bool g)
   {
-  v <- v + 5;
+  v[5] <- v[5] + 5;
   read a;
   true & true -> a1;
-  v -> v[b];
-  v[5] <- 55 - 5;
+  v[5] -> v[b];
+  sal <- 55 - 5;
   v[baa] <- 55 - 5;
   c <- ~ (true);
   f <- true == false;

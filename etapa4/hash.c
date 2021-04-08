@@ -39,6 +39,8 @@ HASH_NODE *hashInsert(char *text, int type){
   new_node->text = (char*) calloc(strlen(text)+1, sizeof(char));
   strcpy(new_node->text, text);
   new_node->next = Table[address];
+  new_node->is_vector = 0;
+  new_node->is_function = 0;
   Table[address] = new_node;
   return new_node;
 }

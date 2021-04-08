@@ -93,6 +93,20 @@ int check_function_nature(char *text)
   return 0;
 }
 
+void set_is_vector(char *text)
+{
+  HASH_NODE *hash_node = hashFind(text);
+
+  hash_node->is_vector = 1;
+}
+
+void set_is_function(char *text)
+{
+  HASH_NODE *hash_node = hashFind(text);
+
+  hash_node->is_function = 1;
+}
+
 DATATYPE get_type_AST_SYMBOL(AST* node)
 {
   HASH_NODE *hash_node;
@@ -118,10 +132,32 @@ DATATYPE get_type_AST_SYMBOL(AST* node)
       return DATATYPE_POINTER;
 
     case SYMBOL_VARIABLE:
-    case SYMBOL_VECTOR:
-    case SYMBOL_FUNCTION:
       hash_node = hashFind(node->symbol->text);
       return hash_node->datatype;
+    case SYMBOL_VECTOR:
+      hash_node = hashFind(node->symbol->text);
+      if(hash_node->is_vector)
+      {
+        hash_node->is_vector = 0;
+        return hash_node->datatype;
+      }
+      else
+      {
+        printf("Semantic Error: the operand %s should be used as vector\n", node->symbol->text);
+        return DATATYPE_ERROR;
+      }
+    case SYMBOL_FUNCTION:
+      hash_node = hashFind(node->symbol->text);
+      if(hash_node->is_function)
+      {
+        hash_node->is_function = 0;
+        return hash_node->datatype;
+      }
+      else
+      {
+        printf("Semantic Error: the operand %s should be used as function\n", node->symbol->text);
+        return DATATYPE_ERROR;
+      }
 
     default:
       printf("There is no corresponding datatype to symbol type %d\n", node->symbol->type);
@@ -208,12 +244,14 @@ DATATYPE get_type_AST_RETURN(AST* node)
 
 DATATYPE get_type_AST_FUNCTION_CALL_NO_PARAMS(AST* node)
 {
+  set_is_function(node->child[0]->symbol->text);
   DATATYPE operand_type = get_type(node->child[0]);
   return operand_type;
 }
 
 DATATYPE get_type_AST_FUNCTION_CALL(AST* node)
 {
+  set_is_function(node->child[0]->symbol->text);
   DATATYPE operand_type = get_type(node->child[0]);
   return operand_type;
 }

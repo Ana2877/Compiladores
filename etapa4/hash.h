@@ -36,6 +36,8 @@ typedef enum
 
 typedef struct hash_node
 {
+  int is_vector;
+  int is_function;
   DATATYPE datatype;
   int type;
   char *text;
