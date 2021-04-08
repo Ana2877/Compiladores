@@ -268,6 +268,34 @@ void validate_type_AST_ASSIGN_ARRAY_LEFT(AST * node)
   validate_assign(node);
 }
 
+void validate_type_AST_IF(AST * node)
+{
+  validate_type_if_and_while(node);
+}
+
+void validate_type_AST_IF_ELSE(AST * node)
+{
+  validate_type_if_and_while(node);
+}
+
+void validate_type_AST_WHILE(AST * node)
+{
+  validate_type_if_and_while(node);
+}
+
+void validate_type_if_and_while(AST * node)
+{
+  DATATYPE operand_type = get_type(node->child[0]);
+
+  printf("left operand type %d\n", operand_type);
+
+  if (!is_bool_type(operand_type))
+  {
+      SemanticErrors++;
+      printf("Semantic Error: invalid operand type in IF or WHILE\n");
+  }
+}
+
 void validate_assign(AST * node)
 {
   DATATYPE assign_type1 = get_type(node->child[1]);
@@ -428,10 +456,8 @@ void check_operands(AST* node)
         break;
 
     case AST_PRINT:
-        //validate_type_AST_PRINT(node);
         break;
     case AST_PRINT_LIST:
-        //validate_type_AST_PRINT_LIST(node);
         break;
 
     case AST_RETURN:
@@ -439,13 +465,13 @@ void check_operands(AST* node)
         break;
 
     case AST_IF:
-        //validate_type_AST_IF(node);
+        validate_type_AST_IF(node);
         break;
     case AST_IF_ELSE:
-        //validate_type_AST_IF_ELSE(node);
+        validate_type_AST_IF_ELSE(node);
         break;
     case AST_WHILE:
-        //validate_type_AST_WHILE(node);
+        validate_type_AST_WHILE(node);
         break;
 
     case AST_VARIABLE_NOT_INITIALIZED:
@@ -475,7 +501,6 @@ void check_operands(AST* node)
         break;
 
     case AST_LITERAL_LIST:
-        //validate_type_AST_LITERAL_LIST(node);
         break;
 
     case AST_PARAMETER_LIST:

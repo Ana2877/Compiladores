@@ -9,12 +9,24 @@ int main(int t, bool f, bool g)
 a <- v[a] + 5;
   read a;
   true & true -> a1;
-  true -> b;
+  2 -> v[b];
   v[5] <- 55 - 5;
-  v[5] <- true;
+  v[5] <- 55 - 5;
   c <-  ~(true);
   f <- true == false;
   g <- true != false;
+  print a, b, c == a1;
+  if(true)
+  then 
+  a <- b;
+  while (a1 == a2 & (c != f)){
+2 -> v[b];
+  v[5] <- 55 - a1;
+  v[5] <- 55 - 5;
+  c <-  ~(true);
+  f <- true == false;
+  
+};
   return 5;
   
 };

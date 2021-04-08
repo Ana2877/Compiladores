@@ -44,3 +44,6 @@ void validate_type_AST_ASSIGN_VARIABLE_LEFT(AST * node);
 void validate_type_AST_ASSIGN_ARRAY_RIGHT(AST * node);
 void validate_type_AST_ASSIGN_ARRAY_LEFT(AST * node);
 void validate_assign(AST * node);
+
+void validate_type_AST_IF(AST * node);
+void validate_type_if_and_while(AST * node);
