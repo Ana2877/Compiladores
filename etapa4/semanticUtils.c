@@ -25,6 +25,13 @@ DATATYPE get_symbol_datatype(int type)
     return 0;
 }
 
+int is_literal(int type)
+{
+    if ((type == SYMBOL_LIT_INTEGER) || (type == SYMBOL_LIT_CHAR) || (type == SYMBOL_LIT_TRUE) || (type == SYMBOL_LIT_FALSE) || (type == SYMBOL_LIT_STRING))
+      return 1;
+    return 0;
+}
+
 int is_arithmetic_type(int type)
 {
   if (type == DATATYPE_CHAR || type == DATATYPE_INT)

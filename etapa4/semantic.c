@@ -287,7 +287,8 @@ void check_function_call_parameters(AST* node, PARAMETER_TYPE_LIST *parameter_ty
   {
     if(parameter_type_list)
     {
-      SemanticErrors += check_variable_nature(node->child[0]->symbol->text);
+      if(!is_literal(node->child[0]->symbol->type))
+        SemanticErrors += check_variable_nature(node->child[0]->symbol->text);
 
       operand_type = get_type(node->child[0]);
       if(!is_compatible(operand_type, parameter_type_list->datatype))
@@ -319,7 +320,8 @@ void check_function_call_parameters(AST* node, PARAMETER_TYPE_LIST *parameter_ty
 void validate_type_AST_FUNCTION_CALL_NO_PARAMAS(AST* node)
 {
   set_is_function(node->child[0]->symbol->text);
-  SemanticErrors += check_function_nature(node->child[0]->symbol->text);
+  if(!is_literal(node->child[0]->symbol->type))
+    SemanticErrors += check_function_nature(node->child[0]->symbol->text);
 }
 
 void validate_type_AST_FUNCTION_CALL(AST* node)
@@ -341,7 +343,8 @@ void validate_type_AST_FUNCTION_CALL(AST* node)
 
     if(node->child[1])
     {
-      SemanticErrors+= check_variable_nature(node->child[1]->symbol->text);
+      if(!is_literal(node->child[1]->symbol->type))
+        SemanticErrors+= check_variable_nature(node->child[1]->symbol->text);
 
       operand_type = get_type(node->child[1]);
       if(!is_compatible(operand_type, parameter_type_list_aux->datatype))

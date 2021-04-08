@@ -7,24 +7,46 @@ bool a1: false;
 char baa: '5';
 bool a2: false;
 
+int incn(int var1, int var2)
+{
+  return var1+var2;
+};
+
+
 char sal(int flu, bool got)
 {
   a<-b;
   return 4;
 };
 
+bool empty_func()
+{
+  return true;
+};
+
 int main (int t, bool f, bool g)
   {
   v[5] <- v[5] + 5;
   read a;
+  print v['c'];
+  while (a<10)
+  {
+    b <- incn(b,1);
+    a <- incn(a,1);
+  };
   true & true -> a1;
   v[5] -> v[b];
   baa <- 55 - 5;
-  v[baa] <- 55 - sal;
+  v[baa] <- 55;
   c <- ~ (true);
   f <- true == false;
   g <- true !=  false;
   print a, b, c==a1;
+  a2 <- empty_func();
+  if (4 > 6) then print "F";
+
+  if(true | true | false | false & false) then
+    print "Digite um numero: \n";
 
   if(true) then
     a<-b;
