@@ -9,7 +9,7 @@ void check_undeclared();
 int get_semantic_errors();
 int get_symbol_datatype(int type);
 void check_operands(AST* node);
-void check_parameters_list(AST* node);
+void check_parameters_list(AST* node, PARAMETER_TYPE_LIST *parameter_type_list);
 
 void validate_type_AST_SUB(AST* node);
 void validate_type_AST_ADD(AST* node);
@@ -46,4 +46,8 @@ void validate_type_AST_ASSIGN_ARRAY_LEFT(AST * node);
 void validate_assign(AST * node);
 
 void validate_type_AST_IF(AST * node);
+void validate_type_AST_WHILE(AST * node);
+void validate_type_AST_IF_ELSE(AST * node);
 void validate_type_if_and_while(AST * node);
+
+void validate_type_AST_FUNCTION_CALL(AST* node);

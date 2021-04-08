@@ -164,6 +164,18 @@ DATATYPE get_type_AST_RETURN(AST* node)
   return operand_type;
 }
 
+DATATYPE get_type_AST_FUNCTION_CALL_NO_PARAMS(AST* node)
+{
+  DATATYPE operand_type = get_type(node->child[0]);
+  return operand_type;
+}
+
+DATATYPE get_type_AST_FUNCTION_CALL(AST* node)
+{
+  DATATYPE operand_type = get_type(node->child[0]);
+  return operand_type;
+}
+
 DATATYPE get_type_AST_VARIABLE_NOT_INITIALIZED(AST* node)
 {
   DATATYPE operand_type = get_type(node->child[0]);
@@ -185,7 +197,6 @@ DATATYPE get_type_AST_ARRAY_INITIALIZED(AST* node)
 DATATYPE get_type_AST_ARRAY_WITH_EXPRESSION(AST* node)
 {
   HASH_NODE *hash_node = hashFind(node->child[0]->symbol->text);
-  printf("datatioe %d\n", hash_node->datatype);
   return hash_node->datatype;
 }
 
@@ -329,7 +340,10 @@ DATATYPE get_type(AST* node)
           break;
 
       case AST_FUNCTION_CALL:
-          //validate_type_AST_FUNCTION_CALL(node);
+          datatype = get_type_AST_FUNCTION_CALL(node);
+          break;
+      case AST_FUNCTION_CALL_NO_PARAMS:
+          datatype = get_type_AST_FUNCTION_CALL_NO_PARAMS(node);
           break;
       case AST_FUNCTION:
           //validate_type_AST_FUNCTION(node);

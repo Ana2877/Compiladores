@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "parameter_type_list.h"
 
 #define HASH_SIZE 997
 
@@ -39,6 +40,7 @@ typedef struct hash_node
   int type;
   char *text;
   struct hash_node *next;
+  PARAMETER_TYPE_LIST *parameter_type_list;
 } HASH_NODE;
 
 void hashInit(void);

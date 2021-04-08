@@ -103,6 +103,13 @@ void decompile_AST_FUNCTION_CALL(AST *node, FILE* outputFile)
   fprintf(outputFile, ")");
 }
 
+// TK_IDENTIFIER '(' ')'
+void decompile_AST_FUNCTION_CALL_NO_PARAMS(AST *node, FILE* outputFile)
+{
+  decompile(node->child[0], outputFile);
+  fprintf(outputFile, "()");
+}
+
 // '(' parameter parameter_list ')'
 void decompile_AST_FUNCTION_PARAMETERS(AST *node, FILE* outputFile)
 {
@@ -401,6 +408,9 @@ void decompile(AST* node, FILE *outputFile)
 
         case AST_FUNCTION_CALL:
             decompile_AST_FUNCTION_CALL(node,outputFile);
+            break;
+        case AST_FUNCTION_CALL_NO_PARAMS:
+            decompile_AST_FUNCTION_CALL_NO_PARAMS(node,outputFile);
             break;
         case AST_FUNCTION:
             decompile_AST_FUNCTION(node,outputFile);

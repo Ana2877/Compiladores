@@ -4,6 +4,11 @@ bool c: false;
 int[10]v;
 bool a1: false;
 bool a2: false;
+int sal(int flu, bool got)
+{
+a <- b;
+  
+};
 int main(int t, bool f, bool g)
 {
 a <- v[a] + 5;
@@ -21,12 +26,12 @@ a <- v[a] + 5;
   a <- b;
   while (a1 == a2 & (c != f)){
 2 -> v[b];
-  v[5] <- 55 - a1;
+  v[5] <- 55 - 5;
   v[5] <- 55 - 5;
   c <-  ~(true);
   f <- true == false;
   
 };
-  return 5;
+  return 5 + sal(a, b);
   
 };

@@ -133,7 +133,8 @@ function: function_header command_block                   { $$ = astCreate(AST_F
 function_header: type TK_IDENTIFIER function_parameters   { $$ = astCreate(AST_FUNCTION_HEADER, 0, $1, astCreateSymbol($2), $3, 0);};
 function_parameters: '(' parameter parameter_list ')'     { $$ = astCreate(AST_FUNCTION_PARAMETERS, 0, $2, $3, 0, 0);}
                       | '('')'                            { $$ = 0;};
-function_call: TK_IDENTIFIER '(' expression expression_list ')'  { $$ = astCreate(AST_FUNCTION_CALL, 0, astCreateSymbol($1), $3, $4, 0);};
+function_call: TK_IDENTIFIER '(' expression expression_list ')'     { $$ = astCreate(AST_FUNCTION_CALL, 0, astCreateSymbol($1), $3, $4, 0);}
+                | TK_IDENTIFIER '('')'                              { $$ = astCreate(AST_FUNCTION_CALL_NO_PARAMS, 0, astCreateSymbol($1), 0, 0, 0);};
 
 
 /* Parameters */

@@ -47,6 +47,7 @@ void astPrint(AST* node, int level)
     case AST_DECLARATION_LIST: printf("AST_DECLARATION_LIST"); break;
 
     case AST_FUNCTION_CALL: printf("AST_FUNCTION_CALL"); break;
+    case AST_FUNCTION_CALL_NO_PARAMS: printf("AST_FUNCTION_CALL_NO_PARAMS"); break;
     case AST_FUNCTION: printf("AST_FUNCTION"); break;
     case AST_FUNCTION_HEADER: printf("AST_FUNCTION_HEADER"); break;
     case AST_FUNCTION_PARAMETERS: printf("AST_FUNCTION_PARAMETERS"); break;

@@ -5,6 +5,11 @@ int [10] v;
 bool a1: false;
 bool a2: false;
 
+int sal(int flu, bool got)
+{
+  a<-b;
+};
+
 int main (int t, bool f, bool g)
   {
   a <- v[a] + 5;
@@ -30,5 +35,5 @@ int main (int t, bool f, bool g)
     f <- true == false;
   };
 
-  return 5;
+  return 5 + sal(a, a1);
 };
