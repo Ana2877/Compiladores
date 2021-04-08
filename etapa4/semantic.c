@@ -237,11 +237,11 @@ void validate_type_AST_DOLLAR(AST* node)
 
 void validate_type_AST_HASHTAG(AST* node)
 {
-  int operand_type = node->child[0]->type;
-  if (operand_type != SYMBOL_KW_POINTER)
+  int operand_type = get_type(node->child[0]);
+  if ((operand_type != SYMBOL_KW_POINTER) && (operand_type != DATATYPE_POINTER))
   {
       SemanticErrors++;
-      printf("Semantic Error: invalid operand type in the DOLLAR use\n");
+      printf("Semantic Error: invalid operand type in the HASHTAG use\n");
   }
 }
 
@@ -362,7 +362,7 @@ void validate_type_AST_VARIABLE_INITIALIZED(AST * node)
   DATATYPE operand_type = get_type(node->child[0]->child[0]);
   DATATYPE operand_assign_type = get_type(node->child[1]);
 
-  if (!is_compatible(operand_type, operand_assign_type))
+  if (!is_compatible(operand_type, operand_assign_type) && (operand_type != DATATYPE_POINTER))
   {
       SemanticErrors++;
       printf("Semantic Error: invalid operand type in variable initialized\n");
@@ -425,7 +425,7 @@ void validate_assign(AST * node)
   // printf("left operand type %d\n", assign_type1);
   // printf("right operand type %d\n", assign_type2);
 
-  if (!(is_arithmetic_type(assign_type1) && is_arithmetic_type(assign_type2)) && assign_type1 != assign_type2)
+  if (!(is_arithmetic_type(assign_type1) && is_arithmetic_type(assign_type2)) && assign_type1 != assign_type2 && assign_type1 != DATATYPE_POINTER && assign_type2 != DATATYPE_POINTER)
   {
       SemanticErrors++;
       printf("Semantic Error: invalid operand type in assign\n");

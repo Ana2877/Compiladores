@@ -6,6 +6,7 @@ bool [10] v2;
 bool a1: false;
 char baa: '5';
 bool a2: false;
+pointer alo: 0;
 
 int incn(int var1, int var2)
 {
@@ -26,7 +27,7 @@ bool empty_func()
 
 int main (int t, bool f, bool g)
   {
-  v[5] <- v[5] + 5;
+  v[5] <- v[a] + 5;
   read a;
   print v['c'];
   while (a<10)
@@ -37,6 +38,9 @@ int main (int t, bool f, bool g)
   true & true -> a1;
   v[5] -> v[b];
   baa <- 55 - 5;
+  alo <- $baa;
+  $baa -> alo;
+  baa <- #alo;
   v[baa] <- 55;
   c <- ~ (true);
   f <- true == false;

@@ -90,7 +90,7 @@
 %left '~' '#' '$'
 
 %%
-program: declaration_list                                     { $$ = $1; Root = $$; astPrint(Root, 0); check_and_set_declarations(Root); check_undeclared(); check_operands(Root);};
+program: declaration_list                                     { $$ = $1; Root = $$; /*astPrint(Root, 0)*/; check_and_set_declarations(Root); check_undeclared(); check_operands(Root);};
 declaration_list: declaration ';' declaration_list            { $$ = astCreate(AST_DECLARATION_LIST, 0, $1, $3, 0, 0);}
                   |                                           { $$ = 0; };
 /* Declaration */

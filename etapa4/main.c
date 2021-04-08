@@ -48,7 +48,7 @@ int main(int argc, char **argv){
 
 	if (semantic_errors > 0)
 	{
-		printf("Compilation ERROR! There was %d semantic errors \n", semantic_errors);
+		printf("\nCompilation ERROR! There was %d semantic errors \n", semantic_errors);
 		exit(4);
 	}
 
