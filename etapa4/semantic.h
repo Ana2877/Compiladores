@@ -50,4 +50,8 @@ void validate_type_AST_WHILE(AST * node);
 void validate_type_AST_IF_ELSE(AST * node);
 void validate_type_if_and_while(AST * node);
 
+void check_function_call_parameters(AST* node, PARAMETER_TYPE_LIST *parameter_type_list);
 void validate_type_AST_FUNCTION_CALL(AST* node);
+
+void validate_type_AST_FUNCTION(AST* node);
+DATATYPE find_return_type(AST *node);

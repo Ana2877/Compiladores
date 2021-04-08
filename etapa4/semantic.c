@@ -240,15 +240,48 @@ void validate_type_AST_HASHTAG(AST* node)
   }
 }
 
+DATATYPE find_return_type(AST *node)
+{
+  DATATYPE operand_type;
+
+  if(node && node->child[0] == 0)
+    return 0;
+
+  if(node->child[0]->type == AST_RETURN)
+  {
+    operand_type = get_type(node->child[0]);
+    return operand_type;
+  }
+  else
+  {
+    if(node->child[1])
+    {
+      find_return_type(node->child[1]);
+    }
+  }
+}
+
+void validate_type_AST_FUNCTION(AST* node)
+{
+  DATATYPE return_type = find_return_type(node->child[1]->child[0]);
+  DATATYPE function_type = get_type(node->child[0]->child[0]);
+
+  if(return_type != function_type)
+  {
+    SemanticErrors++;
+    printf("Semantic Error: the return type differs from the function declaration\n");
+  }
+}
+
 void check_function_call_parameters(AST* node, PARAMETER_TYPE_LIST *parameter_type_list)
 {
   DATATYPE operand_type;
+
   if(node)
   {
     if(parameter_type_list)
     {
       operand_type = get_type(node->child[0]);
-      printf("checando operando %d\n", operand_type);
       if(operand_type != parameter_type_list->datatype)
       {
         SemanticErrors++;
@@ -282,7 +315,7 @@ void validate_type_AST_FUNCTION_CALL(AST* node)
   PARAMETER_TYPE_LIST *parameter_type_list_aux;
 
   hash_node = hashFind(node->child[0]->symbol->text);
-  print_list(hash_node->parameter_type_list);
+  //print_list(hash_node->parameter_type_list);
 
   parameter_type_list_aux = hash_node->parameter_type_list;
   parameter_type_list_aux = parameter_type_list_aux->next;
@@ -297,8 +330,6 @@ void validate_type_AST_FUNCTION_CALL(AST* node)
     }
     check_function_call_parameters(node->child[2], parameter_type_list_aux->next);
   }
-  //printf("Using this text to find: %s\n", node->child[0]->symbol->text);
-  //return hash_node->datatype;
 }
 
 void validate_type_AST_VARIABLE_INITIALIZED(AST * node)
@@ -500,7 +531,7 @@ void check_operands(AST* node)
     case AST_FUNCTION_CALL_NO_PARAMS:
         break;
     case AST_FUNCTION:
-        //validate_type_AST_FUNCTION(node);
+        validate_type_AST_FUNCTION(node);
         break;
     case AST_FUNCTION_HEADER:
         //validate_type_AST_FUNCTION_HEADER(node);

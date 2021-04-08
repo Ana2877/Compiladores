@@ -8,6 +8,7 @@ bool a2: false;
 int sal(int flu, bool got)
 {
   a<-b;
+  return 4;
 };
 
 int main (int t, bool f, bool g)

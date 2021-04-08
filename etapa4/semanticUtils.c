@@ -4,25 +4,21 @@ DATATYPE get_symbol_datatype(int type)
 {
     if (type == SYMBOL_KW_CHAR)
     {
-        printf("got char\n");
         return DATATYPE_CHAR;
     }
 
     if (type == SYMBOL_KW_INT)
     {
-        printf("got INT\n");
         return DATATYPE_INT;
     }
 
     if (type == SYMBOL_KW_POINTER)
     {
-        printf("got pointer\n");
         return DATATYPE_POINTER;
     }
 
     if (type == SYMBOL_KW_BOOL)
     {
-        printf("got bool\n");
         return DATATYPE_BOOL;
     }
 
