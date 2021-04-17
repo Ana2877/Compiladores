@@ -1,0 +1,67 @@
+int a: 0;
+int b: 7;
+bool c: false;
+int[10]v;
+bool[10]v2;
+bool a1: false;
+char baa: '5';
+bool a2: false;
+pointer alo: 0;
+int incn(int var1, int var2)
+{
+return var1 + var2;
+  
+};
+char sal(int flu, bool got)
+{
+a <- b;
+  return 4;
+  
+};
+bool empty_func()
+{
+return true;
+  
+};
+int main(int t, bool f, bool g)
+{
+v[5] <- v[a] + 5;
+  read a;
+  print v['c'];
+  while (a < 10){
+b <- incn(b, 1);
+  a <- incn(a, 1);
+  
+};
+  true & true -> a1;
+  v[5] -> v[b];
+  baa <- 55 - 5;
+  alo <-  $baa;
+   $baa -> alo;
+  baa <-  #alo;
+  v[baa] <- 55;
+  c <-  ~(true);
+  f <- true == false;
+  g <- true != false;
+  print a, b, c == a1;
+  a2 <- empty_func();
+  if(4 > 6)
+  then 
+  print "F";
+  if(true | true | false | false & false)
+  then 
+  print "Digite um numero: \n";
+  if(true)
+  then 
+  a <- b;
+  while (a1 == a2 & (c != f)){
+2 -> v[b];
+  v[5] <- 55 - 5;
+  v[5] <- 55 - 5;
+  c <-  ~(true);
+  f <- true == false;
+  
+};
+  return 5 + sal(a, a2);
+  
+};
