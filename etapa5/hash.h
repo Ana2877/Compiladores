@@ -23,6 +23,8 @@
 #define SYMBOL_VECTOR 13
 #define SYMBOL_FUNCTION 14
 
+#define SYMBOL_LABEL 15
+
 typedef enum
 {
   DATATYPE_ERROR = -1,
@@ -51,5 +53,7 @@ HASH_NODE *hashFind(char *text);
 HASH_NODE *hashInsert(char *text, int type);
 void hashPrint(void);
 int hash_check_undeclared();
+HASH_NODE *makeTemp();
+HASH_NODE *makeLabel();
 
 #endif

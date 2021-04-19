@@ -65,3 +65,21 @@ int hash_check_undeclared(){
         }
   return undeclared;
 }
+
+HASH_NODE *makeTemp()
+{
+  static int serial = 0;
+  char buffer[256] = ".";
+
+  sprintf(buffer, "myWeeirT_emp%d", serial++);
+  return hashInsert(buffer, SYMBOL_VARIABLE);
+}
+
+HASH_NODE *makeLabel()
+{
+  static int serial = 0;
+  char buffer[256] = ".";
+
+  sprintf(buffer, "myWeeirL_abael%d", serial++);
+  return hashInsert(buffer, SYMBOL_LABEL);
+}
