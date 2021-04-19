@@ -1,8 +1,23 @@
 int a: 0;
 int baa: 5;
+bool c: true;
+bool d: true;
 int casa()
 {
 baa <- 55 - 5;
+  if(50 < 5)
+  then 
+  print "banana";
+  if(50 < 5)
+  then 
+  print "banana" else 
+  read a;
+  c <-  ~d;
+  c <-  $d;
+  while (a > baa){
+print "sapatenis";
+  
+};
   return baa;
   
 };

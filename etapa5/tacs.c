@@ -117,12 +117,6 @@ void tac_print(TAC *tac)
         printf("TAC_PUSH");
         break;
 
-    case TAC_ATTRIB:
-        printf("TAC_ATTRIB");
-        break;
-    case TAC_ATTRIB_VECTOR:
-        printf("TAC_ATTRIB_VECTOR");
-        break;
     case TAC_READ:
         printf("TAC_READ");
         break;
@@ -176,9 +170,14 @@ TAC* createFunc(HASH_NODE* symbol, TAC* code_expr)
   return tac_join(tac_join(tac_create(TAC_BEGINFUN, symbol, 0, 0), code_expr), tac_create(TAC_ENDFUN, symbol, 0, 0));
 }
 
-TAC* createAttribution(HASH_NODE* symbol, TAC* code_expr)
+TAC* generate_assign_left(HASH_NODE* symbol, TAC* code_expr)
 {
   return tac_join(code_expr, tac_create(TAC_COPY, symbol, code_expr->res, 0));
+}
+
+TAC* generate_assign_right(HASH_NODE* symbol, TAC* code_expr)
+{
+  return tac_join(code_expr, tac_create(TAC_COPY, code_expr->res, symbol, 0));
 }
 
 TAC* generate_boolean_arithmetic_operator(int tac_operation, TAC* code0, TAC* code1)
@@ -186,19 +185,18 @@ TAC* generate_boolean_arithmetic_operator(int tac_operation, TAC* code0, TAC* co
   return  tac_join(tac_join(code0, code1), tac_create(tac_operation, makeTemp(), code0->res, code1->res));
 }
 
-TAC* createNegation(int tac_operation, TAC* code0)
+TAC* generate_unary_operator(int tac_operation, TAC* code0)
 {
   return  tac_join(code0, tac_create(tac_operation, makeTemp(), code0->res, 0));
 }
 
-TAC* createIf(TAC* code0, TAC* code1)
+TAC* generate_if(TAC* code0, TAC* code1)
 {
   TAC* jmp_tac = 0;
   TAC* label_tac = 0;
   HASH_NODE* new_label = 0;
   new_label = makeLabel();
 
-  // Cria jmp_false para caso a clausula não seja verdadeira, pular o commando
   jmp_tac = tac_create(TAC_JUMP_FALSE, new_label, code0->res, 0);
   jmp_tac->prev = code0;
 
@@ -209,7 +207,7 @@ TAC* createIf(TAC* code0, TAC* code1)
 
 }
 
-TAC* createWhile(TAC* code0, TAC* code1)
+TAC* generate_while(TAC* code0, TAC* code1)
 {
   TAC* jmp_begin_tac = 0;
   TAC* jmp_false_tac = 0;
@@ -223,18 +221,14 @@ TAC* createWhile(TAC* code0, TAC* code1)
   HASH_NODE* end_label = 0;
   end_label = makeLabel();
 
-  // Antes do while, será criado um label para representar inicio do while
   label_begin_tac = tac_create(TAC_LABEL, beggining_label, 0, 0);
 
-  // Cria jmp_false para caso a clausula não seja verdadeira, pular o commando
   jmp_false_tac = tac_create(TAC_JUMP_FALSE, end_label, code0->res, 0);
   jmp_false_tac->prev = code0;
 
-  // No fim do comando while, será criado um JMP para o início e assim reavaliar clausula, podendo ou não iterar de novo
   jmp_begin_tac = tac_create(TAC_JUMP, beggining_label, 0, 0);
   jmp_begin_tac->prev = code1;
 
-  // No fim do while, será criado um label para representar o fim do bloco while
   label_end_tac = tac_create(TAC_LABEL, end_label, 0, 0);
   label_end_tac->prev = jmp_begin_tac;
 
@@ -242,7 +236,7 @@ TAC* createWhile(TAC* code0, TAC* code1)
 
 }
 
-TAC* createIfElse(TAC* code0, TAC* code1, TAC* code2)
+TAC* generate_if_else(TAC* code0, TAC* code1, TAC* code2)
 {
   TAC* jmp_false_tac = 0;
   TAC* jmp_end_tac = 0;
@@ -255,19 +249,15 @@ TAC* createIfElse(TAC* code0, TAC* code1, TAC* code2)
   HASH_NODE* end_else_label = 0;
   end_else_label = makeLabel();
 
-  // Cria jmp_false para caso a clausula seja não seja verdadeira, pular o then
   jmp_false_tac = tac_create(TAC_JUMP_FALSE, else_label, code0->res, 0);
   jmp_false_tac->prev = code0;
 
-  // Cria jmp (incondicional) após o bloco do if-then para ele não entrar no bloco do else e ir para fim de if-then-else
   jmp_end_tac = tac_create(TAC_JUMP, end_else_label, 0, 0);
   jmp_end_tac->prev = code1;
 
-  // Se a expressao era falsa, o jmp_false saltará ate o label do else
   label_false_tac = tac_create(TAC_LABEL, else_label, 0, 0);
   label_false_tac->prev = jmp_end_tac;
 
-  // No fim do else, será criado um label para representar o fim do bloco if-else-then
   label_end_else_tac = tac_create(TAC_LABEL, end_else_label, 0, 0);
   label_end_else_tac->prev = code2;
 
@@ -310,17 +300,18 @@ TAC* generate_code(AST* node)
     case AST_GE: result = generate_boolean_arithmetic_operator(TAC_GE, code[0], code[1]); break;
     case AST_LE: result = generate_boolean_arithmetic_operator(TAC_LE, code[0], code[1]); break;
 
-    case AST_NOT: result = createNegation(TAC_NOT, code[0]); break;
-    case AST_DOLLAR: result = createNegation(TAC_DOLLAR, code[0]); break;
-    case AST_HASHTAG: result = createNegation(TAC_HASHTAG, code[0]); break;
+    case AST_NOT: result = generate_unary_operator(TAC_NOT, code[0]); break;
+    case AST_DOLLAR: result = generate_unary_operator(TAC_DOLLAR, code[0]); break;
+    case AST_HASHTAG: result = generate_unary_operator(TAC_HASHTAG, code[0]); break;
 
     //
-    // AST_ASSIGN_VARIABLE_RIGHT,
-    // AST_ASSIGN_VARIABLE_LEFT,
+    //AST_ASSIGN_VARIABLE_RIGHT,
+    case AST_ASSIGN_VARIABLE_RIGHT: result = generate_assign_right(node->child[0]->symbol, code[1]); break;
+    case AST_ASSIGN_VARIABLE_LEFT: result = generate_assign_left(node->child[0]->symbol, code[1]); break;
     // AST_ASSIGN_ARRAY_LEFT,
     // AST_ASSIGN_ARRAY_RIGHT,
     // case AST_ATRIBUITION:
-    //   result = createAttribution(node->child[0]->symbol, code[1]);
+    //   result = generate_assign_left(node->child[0]->symbol, code[1]);
     //   break;
     //
     // // O ->res é o vetor, o ->op1 é o índice, e o ->op2 é o valor a ser salvo nessa posição do vetor
@@ -350,18 +341,17 @@ TAC* generate_code(AST* node)
       break;
 
     case AST_IF:
-      result = createIf(code[0], code[1]);
+      result = generate_if(code[0], code[1]);
       break;
 
     case AST_IF_ELSE:
-      result = createIfElse(code[0], code[1], code[2]);
+      result = generate_if_else(code[0], code[1], code[2]);
       break;
 
     case AST_WHILE:
-      result = createWhile(code[0], code[1]);
+      result = generate_while(code[0], code[1]);
       break;
 
-    // O ->res é a variável temporária onde a execução da função, o ->op1, vai ser depositado
     case AST_FUNCTION_CALL_NO_PARAMS: ;
       HASH_NODE* func_return_temp = makeTemp();
       result = tac_create(TAC_FUNC_CALL, func_return_temp, code[0]->res, 0);

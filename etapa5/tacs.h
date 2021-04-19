@@ -39,9 +39,6 @@ typedef enum
     TAC_FUNC_CALL,
     TAC_PUSH,
 
-    TAC_ATTRIB,
-    TAC_ATTRIB_VECTOR,
-
     TAC_READ,
     TAC_PRINT,
 
