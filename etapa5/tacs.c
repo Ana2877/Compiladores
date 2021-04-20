@@ -50,17 +50,11 @@ void tac_print(TAC *tac)
     case TAC_LABEL:
         printf("TAC_LABEL");
         break;
-    case TAC_VECTOR_ACCESS:
-        printf("TAC_VECTOR_ACCESS");
-        break;
     case TAC_COPY_LEFT:
         printf("TAC_COPY_LEFT");
         break;
     case TAC_COPY_RIGHT:
         printf("TAC_COPY_RIGHT");
-        break;
-    case TAC_COPY_IDX:
-        printf("TAC_COPY_IDX");
         break;
     case TAC_COPY_VEC_LEFT:
         printf("TAC_COPY_VEC_LEFT");
@@ -125,9 +119,6 @@ void tac_print(TAC *tac)
     case TAC_FUNC_CALL:
         printf("TAC_FUNC_CALL");
         break;
-    case TAC_PUSH:
-        printf("TAC_PUSH");
-        break;
 
     case TAC_READ:
         printf("TAC_READ");
@@ -170,14 +161,8 @@ void tac_print_recursive(TAC *tac)
 
 
 
-
-
-
-
-
-
 // ############################# Code generation helpers #############################
-TAC* createFunc(HASH_NODE* symbol, TAC* code_expr)
+TAC* create_function(HASH_NODE* symbol, TAC* code_expr)
 {
   return tac_join(tac_join(tac_create(TAC_BEGINFUN, symbol, 0, 0), code_expr), tac_create(TAC_ENDFUN, symbol, 0, 0));
 }
@@ -329,13 +314,9 @@ TAC* generate_code(AST* node)
       result = tac_create(TAC_VEC_EXPRESS, makeTemp(), node->child[0]->symbol, code[1]->res);
       break;
 
-    // case AST_FUNC_VOID_DEC:
-    //   result = createFunc(node->child[0]->symbol, code[2]);
-    //   break;
-    //
-    // case AST_FUNC_PARAMS_DEC:
-    //   result = createFunc(node->child[0]->symbol, code[4]);
-    //   break;
+    case AST_FUNCTION:
+      result = create_function(node->child[0]->child[1]->symbol, code[1]);
+      break;
 
     case AST_PRINT:
     case AST_PRINT_LIST:
@@ -366,11 +347,6 @@ TAC* generate_code(AST* node)
       HASH_NODE* func_return_temp = makeTemp();
       result = tac_create(TAC_FUNC_CALL, func_return_temp, code[0]->res, 0);
       break;
-
-    // case AST_VECTOR_ACCESS: ;
-    //   HASH_NODE* access_vector_temp = makeTemp();
-    //   result = tac_join(code[1], tac_create(TAC_VEC_ACCESS, access_vector_temp, code[0]->res, code[1]->res));
-    //   break;
 
     // case AST_FUNCTION_CALL: ;
     //   HASH_NODE* func_return_params_temp = makeTemp();

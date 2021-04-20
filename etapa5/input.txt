@@ -3,9 +3,17 @@ int baa: 5;
 bool c: true;
 bool d: true;
 int [10] vec;
+char cozinha: 'c';
+char salao: 's';
+
+char apartamento(){
+  a <- 0;
+
+  return cozinha;
+};
 
 
-int casa(){
+int casa(int banana){
   baa <- 55 - 5;
   66-6 -> baa;
   baa <- vec[5];
@@ -24,6 +32,8 @@ int casa(){
   while (a>baa){
     print "sapatenis";
   };
+
+  salao <- apartamento();
 
   return baa;
 };

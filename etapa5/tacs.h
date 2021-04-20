@@ -13,14 +13,12 @@ typedef enum
     TAC_LABEL,
 
     TAC_SYMBOL,
-    TAC_VECTOR_ACCESS,
 
     TAC_COPY_LEFT,
     TAC_COPY_RIGHT,
     TAC_COPY_VEC_LEFT,
     TAC_COPY_VEC_RIGHT,
     TAC_VEC_EXPRESS,
-    TAC_COPY_IDX,
     TAC_BEGINFUN,
     TAC_ENDFUN,
 
@@ -41,7 +39,6 @@ typedef enum
     TAC_HASHTAG,
 
     TAC_FUNC_CALL,
-    TAC_PUSH,
 
     TAC_READ,
     TAC_PRINT,
