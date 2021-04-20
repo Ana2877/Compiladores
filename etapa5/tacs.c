@@ -53,11 +53,23 @@ void tac_print(TAC *tac)
     case TAC_VECTOR_ACCESS:
         printf("TAC_VECTOR_ACCESS");
         break;
-    case TAC_COPY:
-        printf("TAC_COPY");
+    case TAC_COPY_LEFT:
+        printf("TAC_COPY_LEFT");
+        break;
+    case TAC_COPY_RIGHT:
+        printf("TAC_COPY_RIGHT");
         break;
     case TAC_COPY_IDX:
         printf("TAC_COPY_IDX");
+        break;
+    case TAC_COPY_VEC_LEFT:
+        printf("TAC_COPY_VEC_LEFT");
+        break;
+    case TAC_COPY_VEC_RIGHT:
+        printf("TAC_COPY_VEC_RIGHT");
+        break;
+    case TAC_VEC_EXPRESS:
+        printf("TAC_VEC_EXPRESS");
         break;
     case TAC_BEGINFUN:
         printf("TAC_BEGINFUN");
@@ -172,12 +184,12 @@ TAC* createFunc(HASH_NODE* symbol, TAC* code_expr)
 
 TAC* generate_assign_left(HASH_NODE* symbol, TAC* code_expr)
 {
-  return tac_join(code_expr, tac_create(TAC_COPY, symbol, code_expr->res, 0));
+  return tac_join(code_expr, tac_create(TAC_COPY_LEFT, symbol, code_expr->res, 0));
 }
 
 TAC* generate_assign_right(HASH_NODE* symbol, TAC* code_expr)
 {
-  return tac_join(code_expr, tac_create(TAC_COPY, code_expr->res, symbol, 0));
+  return tac_join(code_expr, tac_create(TAC_COPY_RIGHT, code_expr->res, symbol, 0));
 }
 
 TAC* generate_boolean_arithmetic_operator(int tac_operation, TAC* code0, TAC* code1)
@@ -304,21 +316,19 @@ TAC* generate_code(AST* node)
     case AST_DOLLAR: result = generate_unary_operator(TAC_DOLLAR, code[0]); break;
     case AST_HASHTAG: result = generate_unary_operator(TAC_HASHTAG, code[0]); break;
 
-    //
-    //AST_ASSIGN_VARIABLE_RIGHT,
-    case AST_ASSIGN_VARIABLE_RIGHT: result = generate_assign_right(node->child[0]->symbol, code[1]); break;
+    case AST_ASSIGN_VARIABLE_RIGHT: result = generate_assign_right(node->child[1]->symbol, code[0]); break;
     case AST_ASSIGN_VARIABLE_LEFT: result = generate_assign_left(node->child[0]->symbol, code[1]); break;
-    // AST_ASSIGN_ARRAY_LEFT,
-    // AST_ASSIGN_ARRAY_RIGHT,
-    // case AST_ATRIBUITION:
-    //   result = generate_assign_left(node->child[0]->symbol, code[1]);
-    //   break;
-    //
-    // // O ->res é o vetor, o ->op1 é o índice, e o ->op2 é o valor a ser salvo nessa posição do vetor
-    // case AST_ATRIBUITION_VEC:
-    //   result = tac_join(code[1], tac_join(code[2], tac_create(TAC_COPY_VEC, node->child[0]->symbol, code[1]->res, code[2]->res)));
-    //   break;
-    //
+
+    case AST_ASSIGN_ARRAY_LEFT:
+      result = tac_join(tac_join(code[0], code[1]), tac_create(TAC_COPY_VEC_LEFT, code[0]->res, code[1]->res, 0));
+      break;
+    case AST_ASSIGN_ARRAY_RIGHT:
+      result = tac_join(tac_join(code[1], code[0]), tac_create(TAC_COPY_VEC_RIGHT, code[1]->res, code[0]->res, 0));
+      break;
+    case AST_ARRAY_WITH_EXPRESSION:
+      result = tac_create(TAC_VEC_EXPRESS, makeTemp(), node->child[0]->symbol, code[1]->res);
+      break;
+
     // case AST_FUNC_VOID_DEC:
     //   result = createFunc(node->child[0]->symbol, code[2]);
     //   break;
