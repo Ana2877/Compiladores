@@ -9,7 +9,6 @@ typedef enum
 {
     TAC_UNKNOWN,
 
-    TAC_TEMP,
     TAC_LABEL,
 
     TAC_SYMBOL,

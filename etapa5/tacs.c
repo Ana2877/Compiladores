@@ -44,9 +44,6 @@ void tac_print(TAC *tac)
     case TAC_SYMBOL:
         printf("TAC_SYMBOL");
         break;
-    case TAC_TEMP:
-        printf("TAC_TEMP");
-        break;
     case TAC_LABEL:
         printf("TAC_LABEL");
         break;
