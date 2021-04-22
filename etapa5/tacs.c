@@ -346,12 +346,12 @@ TAC* generate_code(AST* node)
       result = generate_while(code[0], code[1]);
       break;
 
-    case AST_FUNCTION_CALL_NO_PARAMS:
+    case AST_FUNCTION_CALL_NO_PARAMS:;
       HASH_NODE* func_return_temp = makeTemp();
       result = tac_create(TAC_FUNC_CALL, func_return_temp, code[0]->res, 0);
       break;
 
-    case AST_FUNCTION_CALL:
+    case AST_FUNCTION_CALL:;
       HASH_NODE* func_return_params_temp = makeTemp();
       TAC* tac_func_call = tac_create(TAC_FUNC_CALL, func_return_params_temp, code[0]->res, 0);
       result = tac_join(tac_join(tac_join(code[1], tac_create(TAC_FUNC_PARAMS, code[1]?code[1]->res:0, 0, 0)), code[2]), tac_func_call);

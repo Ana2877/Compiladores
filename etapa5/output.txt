@@ -38,7 +38,7 @@ print "sapatenis";
   
 };
   salao <- apartamento();
-  salao <- escritorio(a + a * baa / a, baa);
+  salao <- escritorio(a + a, baa);
   return baa;
   
 };
