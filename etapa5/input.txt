@@ -13,6 +13,13 @@ char apartamento(){
 };
 
 
+char escritorio(int f, int g){
+  f <- 0;
+
+  return cozinha;
+};
+
+
 int casa(int banana){
   baa <- 55 - 5;
   66-6 -> baa;
@@ -20,7 +27,7 @@ int casa(int banana){
   vec[6] <- 7-3;
   11/2 -> vec[6];
   if(50<5) then
-    print "banana";
+    print "banana", "melao", "martelo";
   if(50<5) then
     print "banana"
   else
@@ -34,6 +41,7 @@ int casa(int banana){
   };
 
   salao <- apartamento();
+  salao <- escritorio(a+a*baa/a, baa);
 
   return baa;
 };

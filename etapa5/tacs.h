@@ -39,6 +39,7 @@ typedef enum
     TAC_HASHTAG,
 
     TAC_FUNC_CALL,
+    TAC_FUNC_PARAMS,
 
     TAC_READ,
     TAC_PRINT,

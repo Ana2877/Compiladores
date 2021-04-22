@@ -119,6 +119,9 @@ void tac_print(TAC *tac)
     case TAC_FUNC_CALL:
         printf("TAC_FUNC_CALL");
         break;
+    case TAC_FUNC_PARAMS:
+        printf("TAC_FUNC_PARAMS");
+        break;
 
     case TAC_READ:
         printf("TAC_READ");
@@ -162,7 +165,7 @@ void tac_print_recursive(TAC *tac)
 
 
 // ############################# Code generation helpers #############################
-TAC* create_function(HASH_NODE* symbol, TAC* code_expr)
+TAC* generate_function(HASH_NODE* symbol, TAC* code_expr)
 {
   return tac_join(tac_join(tac_create(TAC_BEGINFUN, symbol, 0, 0), code_expr), tac_create(TAC_ENDFUN, symbol, 0, 0));
 }
@@ -315,7 +318,7 @@ TAC* generate_code(AST* node)
       break;
 
     case AST_FUNCTION:
-      result = create_function(node->child[0]->child[1]->symbol, code[1]);
+      result = generate_function(node->child[0]->child[1]->symbol, code[1]);
       break;
 
     case AST_PRINT:
@@ -343,20 +346,20 @@ TAC* generate_code(AST* node)
       result = generate_while(code[0], code[1]);
       break;
 
-    case AST_FUNCTION_CALL_NO_PARAMS: ;
+    case AST_FUNCTION_CALL_NO_PARAMS:
       HASH_NODE* func_return_temp = makeTemp();
       result = tac_create(TAC_FUNC_CALL, func_return_temp, code[0]->res, 0);
       break;
 
-    // case AST_FUNCTION_CALL: ;
-    //   HASH_NODE* func_return_params_temp = makeTemp();
-    //   TAC* tac_func_call = tac_create(TAC_FUNC_CALL, func_return_params_temp, code[0]->res, 0);
-    //   result = tac_join(tac_join(tac_join(code[1], tac_create(TAC_FUNC_ARG, code[1]?code[1]->res:0, 0, 0)), code[2]), tac_func_call);
-    //   break;
-    //
-    // case AST_EXPRESSION_LIST: ;
-    //   result = tac_join(tac_join(code[0], tac_create(TAC_FUNC_ARG, code[0]?code[0]->res:0, 0, 0)), code[1]);
-    //   break;
+    case AST_FUNCTION_CALL:
+      HASH_NODE* func_return_params_temp = makeTemp();
+      TAC* tac_func_call = tac_create(TAC_FUNC_CALL, func_return_params_temp, code[0]->res, 0);
+      result = tac_join(tac_join(tac_join(code[1], tac_create(TAC_FUNC_PARAMS, code[1]?code[1]->res:0, 0, 0)), code[2]), tac_func_call);
+      break;
+
+    case AST_EXPRESSION_LIST:
+      result = tac_join(tac_join(code[0], tac_create(TAC_FUNC_PARAMS, code[0]?code[0]->res:0, 0, 0)), code[1]);
+      break;
 
     default:
       result = tac_join(code[0], tac_join(code[1], tac_join(code[2], code[3])));
