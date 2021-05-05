@@ -65,5 +65,6 @@ TAC *tac_join(TAC *tac1, TAC *tac2);
 void tac_print_recursive(TAC *tac);
 void tac_print(TAC *tac);
 TAC* generate_code(AST* node);
+TAC* tac_reverse(TAC* tac);
 
 #endif

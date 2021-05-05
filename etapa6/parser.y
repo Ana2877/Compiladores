@@ -2,6 +2,7 @@
     #include "ast.h"
     #include "tacs.h"
     #include "semantic.h"
+    #include "asm.h"
     int getLineNumber(void);
     int yylex();
     int yyerror();
@@ -91,7 +92,17 @@
 %left '~' '#' '$'
 
 %%
-program: declaration_list                                     { $$ = $1; Root = $$; /*astPrint(Root, 0)*/; check_and_set_declarations(Root); check_undeclared();check_operands(Root); tac_print_recursive(generate_code($1));};
+program: declaration_list                                     { TAC* code;
+                                                                $$ = $1;
+                                                                Root = $$; /*astPrint(Root, 0)*/;
+                                                                check_and_set_declarations(Root);
+                                                                check_undeclared();
+                                                                check_operands(Root);
+                                                                code = generate_code($1);
+                                                                tac_print_recursive(code);
+                                                                code=tac_reverse(code);
+                                                                generate_ASM(code);};
+
 declaration_list: declaration ';' declaration_list            { $$ = astCreate(AST_DECLARATION_LIST, 0, $1, $3, 0, 0);}
                   |                                           { $$ = 0; };
 /* Declaration */

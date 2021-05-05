@@ -7,8 +7,8 @@
 # Therefore, there must be a header of it to be included in scanner.l
 #
 
-etapa6: lex.yy.c main.o hash.o y.tab.c ast.o decompiler.o semantic.o semanticUtils.o parameter_type_list.o tacs.o
-	gcc -Wall -o etapa6 lex.yy.c main.o hash.o ast.c decompiler.c semantic.o semanticUtils.o parameter_type_list.o tacs.o
+etapa6: lex.yy.c main.o hash.o y.tab.c ast.o decompiler.o semantic.o semanticUtils.o parameter_type_list.o tacs.o asm.o
+	gcc -Wall -o etapa6 lex.yy.c main.o hash.o ast.c decompiler.c semantic.o semanticUtils.o parameter_type_list.o tacs.o asm.o
 
 main.o: main.c
 	gcc -c main.c
@@ -18,6 +18,9 @@ semantic.o: semantic.c
 
 tacs.o: tacs.c
 	gcc -c tacs.c
+
+asm.o: asm.c
+	gcc -c asm.c
 
 semanticUtils.o: semanticUtils.c
 	gcc -c semanticUtils.c
