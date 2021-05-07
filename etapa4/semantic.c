@@ -250,9 +250,12 @@ DATATYPE find_return_type(AST *node)
   DATATYPE operand_type;
 
   if(node && node->child[0] == 0)
-    return 0;
+  {
+    operand_type = 0;
+    return operand_type;
+  }
 
-  if(node->child[0]->type == AST_RETURN)
+  else if(node->child[0]->type == AST_RETURN)
   {
     operand_type = get_type(node->child[0]);
     return operand_type;
@@ -261,9 +264,10 @@ DATATYPE find_return_type(AST *node)
   {
     if(node->child[1])
     {
-      find_return_type(node->child[1]);
+      operand_type = find_return_type(node->child[1]);
     }
   }
+  return operand_type;
 }
 
 void validate_type_AST_FUNCTION(AST* node)
@@ -287,7 +291,7 @@ void check_function_call_parameters(AST* node, PARAMETER_TYPE_LIST *parameter_ty
   {
     if(parameter_type_list)
     {
-      if(!is_literal(node->child[0]->symbol->type))
+      if(node->child[0] && !is_literal(node->child[0]->symbol->type))
         SemanticErrors += check_variable_nature(node->child[0]->symbol->text);
 
       operand_type = get_type(node->child[0]);
@@ -343,7 +347,7 @@ void validate_type_AST_FUNCTION_CALL(AST* node)
 
     if(node->child[1])
     {
-      if(!is_literal(node->child[1]->symbol->type))
+      if(node->child[1]->symbol && !is_literal(node->child[1]->symbol->type))
         SemanticErrors+= check_variable_nature(node->child[1]->symbol->text);
 
       operand_type = get_type(node->child[1]);
