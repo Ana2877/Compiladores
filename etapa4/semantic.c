@@ -351,12 +351,13 @@ void validate_type_AST_FUNCTION_CALL(AST* node)
         SemanticErrors+= check_variable_nature(node->child[1]->symbol->text);
 
       operand_type = get_type(node->child[1]);
-      if(!is_compatible(operand_type, parameter_type_list_aux->datatype))
+      if(parameter_type_list_aux && !is_compatible(operand_type, parameter_type_list_aux->datatype))
       {
         SemanticErrors++;
         printf("Semantic Error: invalid argument type in function call\n");
       }
-      check_function_call_parameters(node->child[2], parameter_type_list_aux->next);
+      if (parameter_type_list_aux)
+        check_function_call_parameters(node->child[2], parameter_type_list_aux->next);
     }
   }
 }
