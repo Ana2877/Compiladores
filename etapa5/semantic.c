@@ -250,9 +250,12 @@ DATATYPE find_return_type(AST *node)
   DATATYPE operand_type;
 
   if(node && node->child[0] == 0)
-    return 0;
+  {
+    operand_type = 0;
+    return operand_type;
+  }
 
-  if(node->child[0]->type == AST_RETURN)
+  else if(node->child[0]->type == AST_RETURN)
   {
     operand_type = get_type(node->child[0]);
     return operand_type;
@@ -261,9 +264,10 @@ DATATYPE find_return_type(AST *node)
   {
     if(node->child[1])
     {
-      find_return_type(node->child[1]);
+      operand_type = find_return_type(node->child[1]);
     }
   }
+  return operand_type;
 }
 
 void validate_type_AST_FUNCTION(AST* node)
