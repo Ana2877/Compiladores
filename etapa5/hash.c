@@ -20,11 +20,13 @@ int hashAddress(char *text){
 HASH_NODE *hashFind(char *text){
   HASH_NODE *node;
   int address = hashAddress(text);
-  for(node=Table[address]; node; node = node->next){
-    if(strcmp(node->text, text) == 0)
-      return node;
+  if (Table)
+  {
+    for(node=Table[address]; node; node = node->next){
+      if(strcmp(node->text, text) == 0)
+        return node;
+    }
   }
-
   return 0;
 }
 
@@ -48,21 +50,27 @@ HASH_NODE *hashInsert(char *text, int type){
 void hashPrint(void){
   int i;
   HASH_NODE *node;
-  for(i=0; i<HASH_SIZE; i++)
-    for (node=Table[i]; node; node=node->next)
-      printf("Table[%d] has %s with type %d and datatype %d\n", i, node->text, node->type, node->datatype);
+  if (Table)
+  {
+    for(i=0; i<HASH_SIZE; i++)
+      for (node=Table[i]; node; node=node->next)
+        printf("Table[%d] has %s with type %d and datatype %d\n", i, node->text, node->type, node->datatype);
+  }
 }
 
 int hash_check_undeclared(){
   int i, undeclared = 0;
   HASH_NODE *node;
-  for(i=0; i<HASH_SIZE; i++)
-    for (node=Table[i]; node; node=node->next)
-      if (node->type == SYMBOL_IDENTIFIER)
-        {
-          printf("Semantic error: identifier %s undeclared\n", node->text);
-          undeclared++;
-        }
+  if (Table)
+  {
+    for(i=0; i<HASH_SIZE; i++)
+      for (node=Table[i]; node; node=node->next)
+        if (node->type == SYMBOL_IDENTIFIER)
+          {
+            printf("Semantic error: identifier %s undeclared\n", node->text);
+            undeclared++;
+          }
+  }
   return undeclared;
 }
 
